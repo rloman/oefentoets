@@ -5,6 +5,7 @@ let Kaartenbak = require('./kaartenbak');
 
 let kaartenBak = new Kaartenbak();
 
+// rloman refactor to module
 function assert(assertion, message) {
     if (!assertion) {
         throw new Error(message);
@@ -34,22 +35,8 @@ function assertEquals(expected, actual, message) {
 
     tocht.end = new Date();
 
-    // calculate duration
-    // duration in ms
-    let timeDiff = Math.abs(tocht.end.getTime() - tocht.start.getTime());
-
-    let hours = Math.floor(timeDiff / 1000 / 60 / 60);
-    let hoursAsString = "00" + hours;
-    hoursAsString = hoursAsString.substring(hoursAsString.length - 2, hoursAsString.length);
-
-    let minutes = Math.floor(timeDiff / 1000 / 60 % 60);
-    let minutesAsString = "00" + minutes;
-    minutesAsString = minutesAsString.substring(minutesAsString.length - 2, minutesAsString.length);
-
-    console.log("Response user story 2: ");
-
     console.log(`Enddate: ${tocht.end.getDate()}/${tocht.end.getMonth() + 1}/${tocht.end.getYear()}`);
-    console.log(`Duration: ${hoursAsString}:${minutesAsString}`);
+    console.log("Duration: "+tocht.durationAsString());
 
     console.log("-------------------")
 }
@@ -74,6 +61,7 @@ function assertEquals(expected, actual, message) {
     console.log("Response user story 4: ");
     {
         let sum = 0;
+        // rloman refactor to iterator
         for (let tocht of kaartenBak.getTochten()) {
             if (tocht.end) {
                 sum++;
