@@ -61,12 +61,10 @@ function assertEquals(expected, actual, message) {
     {
         let tocht1Start = new Date(2019, 0, 28, 8, 23, 0, 0);
         let tocht1 = kaartenBak.createTocht(tocht1Start);
-        kaartenBak.addTocht(tocht1);
     }
     {
         let tocht1Start = new Date(2019, 0, 28, 7, 23, 0, 0);
         let tocht1 = kaartenBak.createTocht(tocht1Start);
-        kaartenBak.addTocht(tocht1)
     }
 
 
@@ -93,7 +91,7 @@ function assertEquals(expected, actual, message) {
                 sum++;
             }
         }
-        assertEquals(3, sum, "Should should be 2");
+        assertEquals(2, sum, "Should should be 2");
         console.log("Aantal beeindigde tochten: "+sum);
 
         console.log("-------------------")

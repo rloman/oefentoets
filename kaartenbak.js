@@ -17,11 +17,6 @@ module.exports = class Kaartenbak {
         return this._tochten;
     }
 
-
-    addTocht(tocht) {
-        this._tochten[this._tochten.length] = tocht;
-    }
-
     getTocht(id) {
         return this._tochten[id-1];
     }
