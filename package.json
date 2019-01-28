@@ -1,6 +1,6 @@
 {
   "name": "nl.carpago",
-  "version": "0.1.0",
+  "version": "0.2.0-SNAPSHOT",
   "description": "Oefentoets solution for 01-02-2019",
   "main": "app.js",
   "scripts": {
