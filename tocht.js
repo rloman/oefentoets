@@ -21,4 +21,12 @@ module.exports = class Tocht {
     set end(end) {
         this._end = end;
     }
+
+    duration() {
+
+        let timeDiff = Math.abs(this._end.getTime() - this._start.getTime());
+
+        return timeDiff;
+
+    }
 }
