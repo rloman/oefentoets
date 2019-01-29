@@ -118,6 +118,10 @@ kaartenBak.getTochten().then(rows => {
     }
 });
 
-kaartenBak.getTocht(3).then(tocht => {
-    console.log("Tocht met id: "+tocht.id+" heeft startmoment "+tocht.start);
+kaartenBak.getTocht(3).then(rows => {
+    if(rows) {
+        let tocht = rows[0];
+        console.log(tocht);
+        console.log("Tocht met id: "+tocht.id+" heeft startmoment "+tocht.start);
+    }
 });
