@@ -88,7 +88,7 @@ class Kaartenbak {
 
     beeindigTocht(id) {
          this.query("update tocht set end=? where id=?", [new Date(), id]).then(function(result) {
-             return this.getTocht(id);
+             console.log("Tocht met id "+result.affectedRows+" beeindigd.");
          });
     }
 }
@@ -139,6 +139,7 @@ kaartenBak.getTocht(3).then(rows => {
 
 kaartenBak.deleteTochtById(159);
 
-kaartenBak.beeindigTocht(183).then(target => {
-    console.log(target.id+" is beeindigd op: "+target.end);
-});
+
+let promise1 = kaartenBak.beeindigTocht(183);
+
+console.log(promise1);
