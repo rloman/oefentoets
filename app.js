@@ -41,7 +41,7 @@ class Kaartenbak {
         };
         console.log(tocht);
         console.log("About to insert ... ");
-        this.connection.query('INSERT INTO tocht SET ?', [tocht], function (err, result) {
+        this.connection.query('INSERT INTO tocht SET ?', [tocht], (err, result)  => {
             console.log("In the query");
             if (!err) {
                 console.log("This rocks");
