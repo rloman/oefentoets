@@ -87,9 +87,8 @@ class Kaartenbak {
     }
 
     beeindigTocht(id) {
-         this.query("update tocht set end=? where id=?", [new Date(), id]).then(function(result) {
-             console.log("Tocht met id "+result.affectedRows+" beeindigd.");
-         });
+        let end = new Date();
+         return this.query("update tocht set end=? where id=?", [end, id]);
     }
 }
 
@@ -140,6 +139,10 @@ kaartenBak.getTocht(3).then(rows => {
 kaartenBak.deleteTochtById(159);
 
 
-let promise1 = kaartenBak.beeindigTocht(183);
+let promise1 = kaartenBak.beeindigTocht(248);
 
 console.log(promise1);
+
+promise1.then(function(result) {
+    console.log("Updated with ending "+result.affectedRows);
+}) ;
