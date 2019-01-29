@@ -6,13 +6,21 @@ let mysql = require('mysql');
 class Kaartenbak {
 
     constructor() {
-        // create a MySQL connection
-        this.connection = mysql.createConnection({
-            host: 'localhost',
-            user: 'nodetestuser',
-            password: 'nodetestpass2018Spectrum',
-            database: 'oefentoets'
-        });
+     // create a MySQL connection
+     this.connection = mysql.createConnection({
+        host: 'localhost',
+        user: 'nodetestuser',
+        password: 'nodetestpass2018Spectrum',
+        database: 'oefentoets'
+    });
+    
+    this.connection.connect(function (err) {
+        if (err) {
+            throw err;
+        } else {
+            console.log('Connected!');
+        }
+    });
     }
 
     
@@ -75,9 +83,9 @@ class Kaartenbak {
 
 }
 
-var kaartenBak = new Kaartenbak();
+console.log("Starting main ... ");
 
-// console.log(kaartenBak.connection);
+let kaartenBak = new Kaartenbak();
 
 // rloman refactor to module
 function assert(assertion, message) {
@@ -97,13 +105,12 @@ assert(kaartenBak != null);
 {
 
     console.log("Testing by ray");
-    const tocht = {
+    let tocht = {
         start: new Date()
     };
 
-    kaartenBak.query('insert into tocht set ?', [tocht]).then(rows => {
-        console.log("Poedel");
-        console.log(rows);
+    kaartenBak.query('insert into tocht set ?', [tocht]).then(result => {
+        console.log(result.insertId);
     });
 
 
