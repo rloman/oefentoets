@@ -76,8 +76,8 @@ class Kaartenbak {
         return this.query("select * from tocht");
     }
 
-    getTocht(id) {
-        // return this._tochten[id-1];
+    getTocht(id) { // be aware: returns a Promise
+        return this.query("select * from tocht where id=?", +id);
     }
 }
 
@@ -114,8 +114,10 @@ promise.then(function(rows) {
 // kan dus ook zo
 kaartenBak.getTochten().then(rows => {
     for(let tocht of rows) {
-        console.log(toch.id+", "+tocht.start)
+        console.log(tocht.id+", "+tocht.start);
     }
 });
 
-
+kaartenBak.getTocht(3).then(tocht => {
+    console.log("Tocht met id: "+tocht.id+" heeft startmoment "+tocht.start);
+});
