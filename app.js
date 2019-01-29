@@ -34,7 +34,7 @@ class Kaartenbak {
         });
     }
 
-    insert(tocht) {
+    insert(tocht) { // might refactor this to return the Promise and get the id als the key
         this.connection.query("insert into tocht set ?", [tocht], (err, result) => {
                 console.log(result.insertId);
         })
@@ -77,7 +77,19 @@ class Kaartenbak {
     }
 
     getTocht(id) { // be aware: returns a Promise
-        return this.query("select * from tocht where id=?", +id);
+        return this.query("select * from tocht where id='?'", id);
+    }
+
+    deleteTochtById(id) {
+        this.query("delete from tocht where id='?'", id).then(result => {
+           console.log("There are "+result.affectedRows+" rows deleted!");
+        });
+    }
+
+    beeindigTocht(id) {
+         this.query("update tocht set end=? where id=?", [new Date(), id]).then(function(result) {
+             return this.getTocht(id);
+         });
     }
 }
 
@@ -114,14 +126,19 @@ promise.then(function(rows) {
 // kan dus ook zo
 kaartenBak.getTochten().then(rows => {
     for(let tocht of rows) {
-        console.log(tocht.id+", "+tocht.start);
+        console.log(tocht.id+", "+tocht.start+", "+tocht.end);
     }
 });
 
 kaartenBak.getTocht(3).then(rows => {
     if(rows) {
         let tocht = rows[0];
-        console.log(tocht);
         console.log("Tocht met id: "+tocht.id+" heeft startmoment "+tocht.start);
     }
+});
+
+kaartenBak.deleteTochtById(159);
+
+kaartenBak.beeindigTocht(183).then(target => {
+    console.log(target.id+" is beeindigd op: "+target.end);
 });
