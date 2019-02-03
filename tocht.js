@@ -1,8 +1,7 @@
 module.exports = class Tocht {
 
     // start and end are both Date
-    constructor(id, start) {
-        this._id = id;
+    constructor(start) {
         this._start = start;
     }
 
