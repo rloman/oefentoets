@@ -1,7 +1,7 @@
 'use strict';
 
-let Tocht = require('./tocht');
-let Kaartenbak = require('./kaartenbak');
+let Tocht = require('./modules/tocht');
+let Kaartenbak = require('./modules/kaartenbak');
 
 console.log("Starting main ... ");
 
