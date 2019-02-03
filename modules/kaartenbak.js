@@ -30,10 +30,18 @@ module.exports = class Kaartenbak {
         });
     }
 
-    insert(tocht) { // might refactor this to return the Promise and get the id als the key
-        this.connection.query("insert into tocht set ?", [tocht], (err, result) => {
-                console.log(result.insertId);
-        })
+    insert(tocht) { // might refactor this to return the Promise and get the id als the key (in fact I am doing this)
+        return new Promise((resolve, reject) => {
+            this.connection.query("insert into tocht set ?", [tocht], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                else {
+                    tocht.id = result.insertId;
+                    resolve(tocht);
+                }
+            });
+        });
     }
 
     createTocht(start) {
@@ -41,7 +49,7 @@ module.exports = class Kaartenbak {
         let tocht = {
             start: start
         }
-       this.insert(tocht);
+        this.insert(tocht);
     }
 
     insertAlternate(start) {
@@ -49,12 +57,9 @@ module.exports = class Kaartenbak {
         const tocht = {
             start: start
         };
-        console.log(tocht);
-        console.log("About to insert ... ");
-        this.connection.query('INSERT INTO tocht SET ?', [tocht], (err, result)  => {
+        this.connection.query('INSERT INTO tocht SET ?', [tocht], (err, result) => {
             console.log("In the query");
             if (!err) {
-                console.log("This rocks");
                 console.log('Last insert ID:', result.insertId);
                 tocht.id = result.insertId;
 
@@ -78,12 +83,12 @@ module.exports = class Kaartenbak {
 
     deleteTochtById(id) {
         this.query("delete from tocht where id='?'", id).then(result => {
-           console.log("There are "+result.affectedRows+" rows deleted!");
+            console.log("There are " + result.affectedRows + " rows deleted!");
         });
     }
 
     beeindigTocht(id) {
         let end = new Date();
-         return this.query("update tocht set end=? where id=?", [end, id]);
+        return this.query("update tocht set end=? where id=?", [end, id]);
     }
 }

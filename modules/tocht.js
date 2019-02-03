@@ -9,6 +9,10 @@ module.exports = class Tocht {
         return this._id;
     }
 
+    set id(id) {
+        this._id = id;
+    }
+
     get start() {
         return this._start;
     }
