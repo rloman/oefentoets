@@ -1,4 +1,6 @@
-class Kaartenbak {
+let mysql = require('mysql');
+
+module.exports = class Kaartenbak {
 
     constructor() {
         // create a MySQL connection

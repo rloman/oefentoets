@@ -1,9 +1,7 @@
 'use strict';
 
-let Tocht = require('./tocht.js');
-let mysql = require('mysql');
-let Kaartenbak = require('./kaartenbak.js')
-
+let Tocht = require('./tocht');
+let Kaartenbak = require('./kaartenbak');
 
 console.log("Starting main ... ");
 
@@ -53,8 +51,6 @@ kaartenBak.deleteTochtById(159);
 
 
 let promise1 = kaartenBak.beeindigTocht(248);
-
-console.log(promise1);
 
 promise1.then(function(result) {
     console.log("Updated with ending "+result.affectedRows);
