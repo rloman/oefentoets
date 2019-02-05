@@ -20,46 +20,69 @@ createdTochtPromise.then(function(createdTocht) {
     console.log("Error: >"+error+"<");
 });
 
-// process.exit(0); // warning: tricky since this will stop the PROGRAM BEFORE THE PROMISE IS DONE
-
-
 kaartenBak.query('insert into tocht set ?', [tocht]).then(result => {
-    console.log(result.insertId);
+    console.log("Inserted tocht with id:"+result.insertId);
+
 });
 
 
-console.log(kaartenBak.insertAlternate(new Date())); // IS undefined hence fix
+kaartenBak.insertAlternate(new Date()).then(function(createdTocht, error) {
+    console.log(createdTocht.id);
+   
+})
 
-kaartenBak.createTocht(new Date());
+kaartenBak.createTocht(new Date()).then(function(tocht, error) {
+    if(!error) {
+        console.log("Created a tocht with id:"+tocht.id);
+    }
+});
 
 let promise = kaartenBak.getTochten();
 
-promise.then(function (rows) {
+promise.then(function (rows, error) {
 
-    for (let row of rows) {
-        console.log(row.id + ", " + row.start);
+    if(!error) {
+        for (let row of rows) {
+            console.log(row.id + ", " + row.start);
+        }
     }
 });
 
 // kan dus ook zo
-kaartenBak.getTochten().then(rows => {
-    for (let tocht of rows) {
-        console.log(tocht.id + ", " + tocht.start + ", " + tocht.end);
+kaartenBak.getTochten().then((rows, error) => {
+    if(!error) {
+        for (let tocht of rows) {
+            console.log(tocht.id + ", " + tocht.start + ", " + tocht.end);
+        }
     }
+   
 });
 
-kaartenBak.getTocht(3).then(rows => {
-    if (rows) {
+kaartenBak.getTocht(501).then((rows, error) => {
+    if (!error) {
         let tocht = rows[0];
         console.log("Tocht met id: " + tocht.id + " heeft startmoment " + tocht.start);
     }
 });
 
-kaartenBak.deleteTochtById(159);
-
-
-let promise1 = kaartenBak.beeindigTocht(248);
-
-promise1.then(function (result) {
-    console.log("Updated with ending " + result.affectedRows);
+let victim = 451;
+kaartenBak.deleteTochtById(victim).then((result, error) => {
+    if(!error) {
+        console.log("Tocht with id: "+victim+" is"+(result ? "" : " not") +" deleted");
+    }
 });
+
+
+let promise1 = kaartenBak.beeindigTocht(1000);
+
+promise1.then((result, error) => {
+    if(!error) {
+        console.log("Last method: Updated with ending " + result);
+    }
+    else {
+        console.log("Some error occured "+error);
+    }
+    
+});
+
+kaartenBak.stop();

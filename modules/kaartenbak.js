@@ -20,25 +20,31 @@ module.exports = class Kaartenbak {
         });
     }
 
+    stop() {
+        this.connection.end(function() {
+            console.log("Ending the connection ... Bye ... ");
+        });
+    }
+
     query(sql, args) {
         return new Promise((resolve, reject) => {
             this.connection.query(sql, args, (err, rows) => {
                 if (err)
-                    return reject(err);
+                    reject(err);
                 resolve(rows);
             });
         });
     }
 
     insert(tocht) { // might refactor this to return the Promise and get the id als the key (in fact I am doing this)
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject)  => {
             this.connection.query("insert into tocht set ?", [tocht], (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
-                else {
+                if (!err) {
                     tocht.id = result.insertId;
                     resolve(tocht);
+                }
+                else {
+                    reject(err);
                 }
             });
         });
@@ -49,7 +55,7 @@ module.exports = class Kaartenbak {
         let tocht = {
             start: start
         }
-        this.insert(tocht);
+        return this.insert(tocht);
     }
 
     insertAlternate(start) {
@@ -57,24 +63,39 @@ module.exports = class Kaartenbak {
         const tocht = {
             start: start
         };
-        this.connection.query('INSERT INTO tocht SET ?', [tocht], (err, result) => {
-            console.log("In the query");
-            if (!err) {
-                console.log('Last insert ID:', result.insertId);
-                tocht.id = result.insertId;
 
-                return tocht;
+        // use an array function here instead of function() since else this.connection would be undefined
+        // better said: an arrow function has lexical scope. here, this is the kaartenbak (hence this.connection is reachable)
+        return new Promise((resolve, reject) => {
+                this.connection.query("insert into tocht set ?", [tocht], (error, result) => {
+                    if(!error) {
+                        console.log("in my thing rloman");
+                        tocht.id = result.insertId;
 
-            }
-            else {
-                console.log("This sucks");
-                throw err;
-            }
+                        resolve(tocht);
+                    }
+                    else {
+                        reject(err);
+                    }
+                })
         });
     }
 
     getTochten() {
-        return this.query("select * from tocht");
+        // return this.query("select * from tocht");
+
+        return new Promise((resolve, reject) => {
+            this.connection.query("select * from tocht", function(error, rows) {
+                if(!error) {
+                    resolve(rows);
+                }
+                else {
+                    reject(error);
+                }
+                
+
+            })
+        });
     }
 
     getTocht(id) { // be aware: returns a Promise
@@ -82,13 +103,30 @@ module.exports = class Kaartenbak {
     }
 
     deleteTochtById(id) {
-        this.query("delete from tocht where id='?'", id).then(result => {
-            console.log("There are " + result.affectedRows + " rows deleted!");
+        return new Promise((resolve, reject) => {
+            this.connection.query("delete from tocht where id='?'", id, function(error, result) {
+                if(!error) {
+                    resolve(result.affectedRows === 1);
+                }
+                else {
+                    reject(false);
+                }
+            });
         });
     }
 
     beeindigTocht(id) {
         let end = new Date();
-        return this.query("update tocht set end=? where id=?", [end, id]);
+
+        return new Promise((resolve, reject) => {
+            this.connection.query("update tocht set end=? where id=?", [end, id], (error, result) => {
+                if(!error) {
+                    resolve(result.affectedRows === 1);
+                }
+                else {
+                    reject(false);
+                }
+            })
+        });
     }
 }
