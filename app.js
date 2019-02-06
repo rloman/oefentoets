@@ -14,75 +14,67 @@ let tocht = {
 let createdTochtPromise = kaartenBak.insert(tocht);
 
 
-createdTochtPromise.then(function(createdTocht) {
+// be aware that here createdTocht and error are parameters of arrow functions
+createdTochtPromise.then(createdTocht => {
     console.log("Created tocht: >" + createdTocht.id + "<");
-}, function(error) {
-    console.log("Error: >"+error+"<");
+}, error => {
+    console.log("Error: >" + error + "<");
 });
+
 
 kaartenBak.query('insert into tocht set ?', [tocht]).then(result => {
-    console.log("Inserted tocht with id:"+result.insertId);
-
+    console.log("Inserted tocht with id:" + result.insertId);
+}, error => {
+    console.log("Error: " + error);
 });
 
 
-kaartenBak.insertAlternate(new Date()).then(function(createdTocht, error) {
+kaartenBak.insertAlternate(new Date()).then(function (createdTocht) {
     console.log(createdTocht.id);
-   
+}, function (error) {
+    console.log("Foutje bedankt:" + error);
 })
 
-kaartenBak.createTocht(new Date()).then(function(tocht, error) {
-    if(!error) {
-        console.log("Created a tocht with id:"+tocht.id);
-    }
+kaartenBak.createTocht(new Date()).then(function (tocht) {
+    console.log("Created a tocht with id:" + tocht.id);
+}, function (error) {
+    console.log(error);
 });
 
 let promise = kaartenBak.getTochten();
 
-promise.then(function (rows, error) {
-
-    if(!error) {
-        for (let row of rows) {
-            console.log(row.id + ", " + row.start);
-        }
+promise.then(function (rows) {
+    for (let row of rows) {
+        console.log(row.id + ", " + row.start);
     }
-});
+}, error => console.log(error));
 
-// kan dus ook zo
-kaartenBak.getTochten().then((rows, error) => {
-    if(!error) {
-        for (let tocht of rows) {
-            console.log(tocht.id + ", " + tocht.start + ", " + tocht.end);
-        }
+// again be aware ... after then there follow TWO functions
+kaartenBak.getTochten().then(rows => {
+    for (let tocht of rows) {
+        console.log(tocht.id + ", " + tocht.start + ", " + tocht.end);
     }
-   
-});
+}, error => console.log(error));
 
-kaartenBak.getTocht(501).then((rows, error) => {
-    if (!error) {
-        let tocht = rows[0];
-        console.log("Tocht met id: " + tocht.id + " heeft startmoment " + tocht.start);
-    }
+kaartenBak.getTocht(501).then(rows => {
+    let tocht = rows[0];
+    console.log("Tocht met id: " + tocht.id + " heeft startmoment " + tocht.start);
+}, error => {
+    console.log("Something went wrong" + error);
 });
 
 let victim = 451;
-kaartenBak.deleteTochtById(victim).then((result, error) => {
-    if(!error) {
-        console.log("Tocht with id: "+victim+" is"+(result ? "" : " not") +" deleted");
-    }
+kaartenBak.deleteTochtById(victim).then((result) => { // result his brackets might be omitted, but are still valid
+        console.log("Tocht with id: " + victim + " is" + (result ? "" : " not") + " deleted");
+}, error => {
+    console.log("Error again: "+error);
 });
 
 
-let promise1 = kaartenBak.beeindigTocht(1000);
-
-promise1.then((result, error) => {
-    if(!error) {
+kaartenBak.beeindigTocht(1000).then(result => {
         console.log("Last method: Updated with ending " + result);
-    }
-    else {
-        console.log("Some error occured "+error);
-    }
-    
+}, error => {
+    console.log("Some error occured " + error);
 });
 
 kaartenBak.stop();

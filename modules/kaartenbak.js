@@ -28,10 +28,13 @@ module.exports = class Kaartenbak {
 
     query(sql, args) {
         return new Promise((resolve, reject) => {
-            this.connection.query(sql, args, (err, rows) => {
-                if (err)
+            this.connection.query(sql, args, (err, rows) => { // be aware: the mysql connect.query returns error first and the rows
+                if (!err) {
+                    resolve(rows);
+                }
+                else {
                     reject(err);
-                resolve(rows);
+                }
             });
         });
     }
