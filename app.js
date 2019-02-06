@@ -11,7 +11,9 @@ let kaartenBak = new Kaartenbak();
 
 kaartenBak.removeAll().then(result => {
 
-    console.log(`Removed ${result} tochten`);
+    if(result) {
+        console.log(`Removed all tochten`);
+    }
 
 }, error => {
     console.log("Unable to remove tochts for reason: " + error);
@@ -68,14 +70,14 @@ kaartenBak.getTochten().then(rows => {
     console.log(error);
 });
 
-kaartenBak.getTocht(501).then(rows => {
+kaartenBak.getTocht(2).then(rows => {
     let tocht = rows[0];
     console.log("Tocht met id: " + tocht.id + " heeft startmoment " + tocht.start);
 }, error => {
     console.log("Something went wrong" + error);
 });
 
-let victim = 451;
+let victim = 3;
 kaartenBak.deleteTochtById(victim).then((result) => { // result his brackets might be omitted, but are still valid
     console.log("Tocht with id: " + victim + " is" + (result ? "" : " not") + " deleted");
 }, error => {
