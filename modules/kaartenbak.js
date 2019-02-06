@@ -132,4 +132,24 @@ module.exports = class Kaartenbak {
             })
         });
     }
+
+    removeAll() {
+        return new Promise((resolve, reject) => {
+            this.connection.query("truncate table tocht", (error, result) => {
+                if(!error) {
+                    this.connection.query('ALTER TABLE tocht AUTO_INCREMENT = 0', (error, aResult) => {
+                        if(!error) {
+                            resolve(result.affectedRows);
+                        }
+                        else {
+                            reject(error);
+                        }
+                    });
+                }
+                else {
+                    
+                }
+            })
+        });
+    }
 }

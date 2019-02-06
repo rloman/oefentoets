@@ -7,6 +7,16 @@ console.log("Starting main ... ");
 
 let kaartenBak = new Kaartenbak();
 
+// clear all (for demo)
+
+kaartenBak.removeAll().then(result => {
+
+    console.log(`Removed ${result} tochten`);
+
+}, error => {
+    console.log("Unable to remove tochts for reason: " + error);
+});
+
 let tocht = {
     start: new Date()
 };
@@ -54,7 +64,9 @@ kaartenBak.getTochten().then(rows => {
     for (let tocht of rows) {
         console.log(tocht.id + ", " + tocht.start + ", " + tocht.end);
     }
-}, error => console.log(error));
+}, error => {
+    console.log(error);
+});
 
 kaartenBak.getTocht(501).then(rows => {
     let tocht = rows[0];
@@ -65,14 +77,14 @@ kaartenBak.getTocht(501).then(rows => {
 
 let victim = 451;
 kaartenBak.deleteTochtById(victim).then((result) => { // result his brackets might be omitted, but are still valid
-        console.log("Tocht with id: " + victim + " is" + (result ? "" : " not") + " deleted");
+    console.log("Tocht with id: " + victim + " is" + (result ? "" : " not") + " deleted");
 }, error => {
-    console.log("Error again: "+error);
+    console.log("Error again: " + error);
 });
 
 
 kaartenBak.beeindigTocht(1000).then(result => {
-        console.log("Last method: Updated with ending " + result);
+    console.log("Last method: Updated with ending " + result);
 }, error => {
     console.log("Some error occured " + error);
 });
