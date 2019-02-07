@@ -70,11 +70,17 @@ kaartenBak.getTochten().then(rows => {
     console.log(error);
 });
 
-kaartenBak.getTocht(2).then(rows => {
-    let tocht = rows[0];
-    console.log("Tocht met id: " + tocht.id + " heeft startmoment " + tocht.start);
+let victim = 3;
+
+kaartenBak.getTocht(victim).then(tocht => {
+    if(tocht) {
+        console.log("Tocht met id: " + tocht.id + " heeft startmoment " + tocht.start);
+    }
+    else {
+        console.log("Tocht with id: "+victim+" not found!");
+    }
 }, error => {
-    console.log("Something went wrong" + error);
+    console.log("Something went wrong since: " + error);
 });
 
 let victim = 3;

@@ -102,7 +102,22 @@ module.exports = class Kaartenbak {
     }
 
     getTocht(id) { // be aware: returns a Promise
-        return this.query("select * from tocht where id='?'", id);
+        return new Promise((resolve, reject) => {
+            this.connection.query("select * from tocht where id='?'", [id], (error, rows) => {
+                if(!error) {
+                    let tocht = rows[0];
+                    if(tocht) {
+                        resolve(tocht);
+                    }
+                    else {
+                        reject(404);
+                    }
+                }
+                else {
+                    reject(error);
+                }
+            });
+        });
     }
 
     deleteTochtById(id) {
