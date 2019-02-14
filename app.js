@@ -83,7 +83,7 @@ kaartenBak.getTocht(victim).then(tocht => {
     console.log("Something went wrong since: " + error);
 });
 
-let victim = 3;
+victim = 3;
 kaartenBak.deleteTochtById(victim).then((result) => { // result his brackets might be omitted, but are still valid
     console.log("Tocht with id: " + victim + " is" + (result ? "" : " not") + " deleted");
 }, error => {
