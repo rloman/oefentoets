@@ -1,0 +1,19 @@
+== News Flash
+
+.22-02-2019
+* Released version v1.0.0
+
+== Release notes
+
+.v1.0.0 (22-02-2019)
+* Refactor the (bad) usage of then(s) to good usage of then(function, function)
+* Add more Promises in the kaartenbak and use then
+* Refactored kaartenbak and add following work in issues.txt
+* Rename old to trials
+* Move some (for reference) files to old
+* Refactor kaartenbak class in app.js file to module
+* Finally all rocking with some gold plating to do
+* Rocker voor app.js met getTochten() (was al OK) en nu ook getTocht(id)
+* Having a rocking situation. Even in app.js so it finally rocks
+* Delete node_modules from repo. Amend .gitignore
+* With a lot of hassle have running test.js (and NOT an app.js)

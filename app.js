@@ -1,111 +1,100 @@
 'use strict';
 
-let Tocht = require('./tocht.js');
+let Tocht = require('./modules/tocht');
+let Kaartenbak = require('./modules/kaartenbak');
 
-let tochten = [];
+console.log("Starting main ... ");
 
-function assert(assertion, message) {
-    if (!assertion) {
-        throw new Error(message);
-    }
-}
+let kaartenBak = new Kaartenbak();
 
-//user story 1
-{
-    let tocht1Start = new Date(2019, 0, 28, 9, 23, 0, 0);
-    let tocht1 = new Tocht(tochten.length + 1, tocht1Start);
-    tochten[tochten.length] = tocht1;
+// clear all (for demo)
 
-    console.log("Response user story 1: ");
-    console.log(tocht1.id);
-    console.log("-------------------")
-}
+kaartenBak.removeAll().then(result => {
 
-// user story 2 // assume tocht.id = 1;
-{
-    let id = 1;
-    let tocht = tochten[id - 1];    
-
-    tocht.end = new Date();
-
-    // calculate duration
-    // duration in ms
-    let timeDiff = Math.abs(tocht.end.getTime() - tocht.start.getTime());
-
-    let hours = Math.floor(timeDiff / 1000 / 60 / 60);
-    let hoursAsString = "00" + hours;
-    hoursAsString = hoursAsString.substring(hoursAsString.length - 2, hoursAsString.length);
-
-    let minutes = Math.floor(timeDiff / 1000 / 60 % 60);
-    let minutesAsString = "00" + minutes;
-    minutesAsString = minutesAsString.substring(minutesAsString.length - 2, minutesAsString.length);
-
-    console.log("Response user story 2: ");
-
-    console.log(`Enddate: ${tocht.end.getDate()}/${tocht.end.getMonth() + 1}/${tocht.end.getYear()}`);
-    console.log(`Duration: ${hoursAsString}:${minutesAsString}`);
-
-    console.log("-------------------")
-}
-
-// user story 4 : Inzicht in het aantal tochten
-
-// add some more tochten
-{
-    {
-        let tocht1Start = new Date(2019, 0, 28, 8, 23, 0, 0);
-        let tocht1 = new Tocht(tochten.length + 1, tocht1Start);
-        tochten[tochten.length] = tocht1;
-    }
-    {
-        let tocht1Start = new Date(2019, 0, 28, 7, 23, 0, 0);
-        let tocht1 = new Tocht(tochten.length + 1, tocht1Start);
-        tochten[tochten.length] = tocht1;
+    if(result) {
+        console.log(`Removed all tochten`);
     }
 
+}, error => {
+    console.log("Unable to remove tochts for reason: " + error);
+});
+
+let tocht = {
+    start: new Date()
+};
+
+let createdTochtPromise = kaartenBak.insert(tocht);
 
 
-}
-{
-    console.log("Response user story 4: ");
-    {
-        let sum = 0;
-        for (let tocht of tochten) {
-            if (tocht.end) {
-                sum++;
-            }
-        }
-        assert(sum == 1);
-        console.log("Aantal beeindigde tochten: "+sum);
+// be aware that here createdTocht and error are parameters of arrow functions
+createdTochtPromise.then(createdTocht => {
+    console.log("Created tocht: >" + createdTocht.id + "<");
+}, error => {
+    console.log("Error: >" + error + "<");
+});
+
+
+kaartenBak.query('insert into tocht set ?', [tocht]).then(result => {
+    console.log("Inserted tocht with id:" + result.insertId);
+}, error => {
+    console.log("Error: " + error);
+});
+
+
+kaartenBak.insertAlternate(new Date()).then(function (createdTocht) {
+    console.log(createdTocht.id);
+}, function (error) {
+    console.log("Foutje bedankt:" + error);
+})
+
+kaartenBak.createTocht(new Date()).then(function (tocht) {
+    console.log("Created a tocht with id:" + tocht.id);
+}, function (error) {
+    console.log(error);
+});
+
+let promise = kaartenBak.getTochten();
+
+promise.then(function (rows) {
+    for (let row of rows) {
+        console.log(row.id + ", " + row.start);
     }
-    {
-        // end a tocht
-        let sum = 0;
-        tochten[1].end = new Date();
-        for (let tocht of tochten) {
-            if (tocht.end) {
-                sum++;
-            }
-        }
-        assert(sum == 2);
-        console.log("Aantal beeindigde tochten: "+sum);
+}, error => console.log(error));
 
-        console.log("-------------------")
+// again be aware ... after then there follow TWO functions
+kaartenBak.getTochten().then(rows => {
+    for (let tocht of rows) {
+        console.log(tocht.id + ", " + tocht.start + ", " + tocht.end);
     }
+}, error => {
+    console.log(error);
+});
+
+let victim = 3;
+
+kaartenBak.getTocht(victim).then(tocht => {
+    if(tocht) {
+        console.log("Tocht met id: " + tocht.id + " heeft startmoment " + tocht.start);
+    }
+    else {
+        console.log("Tocht with id: "+victim+" not found!");
+    }
+}, error => {
+    console.log("Something went wrong since: " + error);
+});
+
+victim = 3;
+kaartenBak.deleteTochtById(victim).then((result) => { // result his brackets might be omitted, but are still valid
+    console.log("Tocht with id: " + victim + " is" + (result ? "" : " not") + " deleted");
+}, error => {
+    console.log("Error again: " + error);
+});
 
 
-}
+kaartenBak.beeindigTocht(1000).then(result => {
+    console.log("Last method: Updated with ending " + result);
+}, error => {
+    console.log("Some error occured " + error);
+});
 
-
-// user story 5: Informatie over de duur van de tochten
-let aantal = 0;
-let sumTime = 0; // ms
-
-for(let tocht of tochten.filter(e => e.end != null)) {
-    aantal++;
-    sumTime += tocht.duration(); //ms
-    console.log(sumTime)
-}
-assert(aantal == 2);
-
-console.log("Gemiddelde in minuten: "+Math.ceil(sumTime/1000/60/aantal));
+kaartenBak.stop();

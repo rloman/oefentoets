@@ -1,11 +1,14 @@
 {
   "name": "nl.carpago",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Oefentoets solution for 01-02-2019",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "R. Loman",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "mysql": "^2.16.0"
+  }
 }
