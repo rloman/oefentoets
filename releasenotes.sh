@@ -1,1 +1,1 @@
-../../release-notes-generator/releasenotes.sh
+/home/rloman/repo/release-notes-generator/releasenotes.sh
