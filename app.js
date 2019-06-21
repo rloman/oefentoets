@@ -1,14 +1,11 @@
 'use strict';
 
 let Tocht = require('./modules/tocht');
-let Kaartenbak = require('./modules/kaartenbak');
+let kaartenBak = require('./modules/kaartenbak');
 
 console.log("Starting main ... ");
 
-let kaartenBak = new Kaartenbak();
-
 // clear all (for demo)
-
 kaartenBak.removeAll().then(result => {
 
     if(result) {

@@ -1,6 +1,6 @@
 let mysql = require('mysql');
 
-module.exports = class Kaartenbak {
+class Kaartenbak {
 
     constructor() {
         // create a MySQL connection
@@ -161,3 +161,7 @@ module.exports = class Kaartenbak {
         });
     }
 }
+
+
+
+module.exports = new Kaartenbak();
