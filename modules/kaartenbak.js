@@ -148,7 +148,7 @@ class Kaartenbak {
         });
     }
 
-    removeAll() {
+    async removeAll() {
         return new Promise((resolve, reject) => {
             this.connection.query("truncate table tocht", (error, result) => {
                 if (!error) {
