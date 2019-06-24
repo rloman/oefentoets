@@ -71,44 +71,44 @@ console.log("Starting main ... ");
         console.log("Foutje bedankt:" + error);
     }
        
-    kaartenBak.createTocht(new Date()).then(function (tocht) {
+    try {
+        let tocht = await kaartenBak.createTocht(new Date());
         assert(0 !== tocht.id);
         console.log("Created a tocht with id:" + tocht.id);
-    }, function (error) {
-        asssert(false);
+    }
+    catch(error) {
+        assert(false);
         console.log(error);
-    });
-    
-    let promise = kaartenBak.getTochten();
-    
-    assert(promise.then, "Promise (promise) should be promise");
-    
-    promise.then(function (rows) {
-        assert(true);
+    }
+
+    try {
+        let rows = await kaartenBak.getTochten();
         for (let row of rows) {
             console.log(row.id + ", " + row.start);
         }
-    }, error =>  {
+    }
+    catch(error) {
         assert(false);
         console.log(error);
-    });
-    
-    // again be aware ... after then there follow TWO functions
-    kaartenBak.getTochten().then(rows => {
-      
+    }
+
+    try {
+        let rows = await kaartenBak.getTochten();
         let counter = 0;
         for (let tocht of rows) {
-            assert(true);
             counter++;
             console.log(tocht.id + ", " + tocht.start + ", " + tocht.end);
         }
         assert(counter > 0);
-    }, error => {
+
+    }
+    catch(error) {
+        assert(false);
         console.log(error);
-    });
+    }
     
     const victim = 3;
-    
+
     kaartenBak.getTocht(victim).then(tocht => {
         if(tocht) {
             console.log("Tocht met id: " + tocht.id + " heeft startmoment " + tocht.start);
