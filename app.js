@@ -8,9 +8,12 @@ let kaartenBak = require('./modules/kaartenbak');
 function assert(b, message) {
     if(!b) {
         if(message) {
-            console.error(message);
+            console.log(new Error(message));
         }
-        throw new Error(message);
+        else {
+            console.log(new Error());
+        }
+        
         process.exit();
     }
 }
