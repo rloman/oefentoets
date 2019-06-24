@@ -109,7 +109,8 @@ console.log("Starting main ... ");
     
     const victim = 3;
 
-    kaartenBak.getTocht(victim).then(tocht => {
+    try {
+        let tocht = await kaartenBak.getTocht(victim);
         if(tocht) {
             console.log("Tocht met id: " + tocht.id + " heeft startmoment " + tocht.start);
         }
@@ -117,11 +118,12 @@ console.log("Starting main ... ");
             assert(false, "Geen toch gevonden met id: "+victim);
             console.log("Tocht with id: "+victim+" not found!");
         }
-    }, error => {
+    }
+    catch(error) {
         assert(false, "Fout / error ");
         console.log("Something went wrong since: " + error);
-    });
-    
+    }
+
     kaartenBak.deleteTochtById(victim).then((result) => { // result his brackets might be omitted, but are still valid
         console.log("Tocht with id: " + victim + " is" + (result ? "" : " not") + " deleted");
     }, error => {
