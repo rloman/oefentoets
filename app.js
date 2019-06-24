@@ -123,21 +123,37 @@ console.log("Starting main ... ");
         console.log("Something went wrong since: " + error);
     }
 
-    kaartenBak.deleteTochtById(victim).then((result) => { // result his brackets might be omitted, but are still valid
+    try {
+        let result = await kaartenBak.deleteTochtById(victim);
         console.log("Tocht with id: " + victim + " is" + (result ? "" : " not") + " deleted");
-    }, error => {
+    }
+    catch(error) {
         assert(false);
         console.log("Error again: " + error);
-    });
-    
-    
-    kaartenBak.beeindigTocht(1000).then(result => {
-        console.log("Last method: Updated with ending " + result);
-    }, error => {
+    }
+
+    try {
+        let result = await kaartenBak.beeindigTocht(1); // 1 is there~~~???~?~?
+        console.log("Last method: Updated with ending expected:true, actual:" + result);
+        assert (result);// since there is no tocht with id 1000
+        
+    }
+    catch(error) {
         assert(false);
         console.log("Some error occured " + error);
-    });
-    
+    }
+
+    try {
+        let result = await kaartenBak.beeindigTocht(1000);
+        console.log("Last method: Updated with ending expected:false, actual:" + result);
+        assert (!result);// since there is no tocht with id 1000
+       
+    }
+    catch(error) {
+        assert(false);
+        console.log("Some error occured " + error);
+    }
+        
     kaartenBak.stop();
 })();
 
