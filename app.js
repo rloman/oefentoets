@@ -4,19 +4,7 @@
 
 let Tocht = require('./modules/tocht');
 let kaartenBak = require('./modules/kaartenbak');
-
-function assert(b, message) {
-    if(!b) {
-        if(message) {
-            console.log(new Error(message));
-        }
-        else {
-            console.log(new Error());
-        }
-        
-        process.exit();
-    }
-}
+let assert = require("./modules/utils").assert;
 
 console.log("Starting main ... ");
 
