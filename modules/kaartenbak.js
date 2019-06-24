@@ -27,7 +27,7 @@ class Kaartenbak {
     }
 
     async query(sql, args) {
-        return await ((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             this.connection.query(sql, args, (err, rows) => { // be aware: the mysql connect.query returns error first and the rows
                 if (!err) {
                     resolve(rows);
