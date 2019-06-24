@@ -53,7 +53,6 @@ console.log("Starting main ... ");
         assert(result);
         console.log("Inserted tocht with id:" + result.insertId);
         assert(result && result.insertId > 0);
-        console.log("Inserted tocht with id:" + result.insertId);
     }
 
     catch(error) {
