@@ -7,8 +7,11 @@ let kaartenBak = require('./modules/kaartenbak');
 
 function assert(b, message) {
     if(!b) {
-        console.error(message);
+        if(message) {
+            console.error(message);
+        }
         throw new Error(message);
+        process.exit();
     }
 }
 
@@ -98,23 +101,25 @@ kaartenBak.getTochten().then(rows => {
     console.log(error);
 });
 
-let victim = 3;
+const victim = 3;
 
 kaartenBak.getTocht(victim).then(tocht => {
     if(tocht) {
         console.log("Tocht met id: " + tocht.id + " heeft startmoment " + tocht.start);
     }
     else {
+        assert(false, "Geen toch gevonden met id: "+victim);
         console.log("Tocht with id: "+victim+" not found!");
     }
 }, error => {
+    assert(false, "Fout / error ");
     console.log("Something went wrong since: " + error);
 });
 
-victim = 3;
 kaartenBak.deleteTochtById(victim).then((result) => { // result his brackets might be omitted, but are still valid
     console.log("Tocht with id: " + victim + " is" + (result ? "" : " not") + " deleted");
 }, error => {
+    assert(false);
     console.log("Error again: " + error);
 });
 
@@ -122,6 +127,7 @@ kaartenBak.deleteTochtById(victim).then((result) => { // result his brackets mig
 kaartenBak.beeindigTocht(1000).then(result => {
     console.log("Last method: Updated with ending " + result);
 }, error => {
+    assert(false);
     console.log("Some error occured " + error);
 });
 
