@@ -141,6 +141,4 @@ class Kaartenbak {
     }
 }
 
-
-
 module.exports = new Kaartenbak();
