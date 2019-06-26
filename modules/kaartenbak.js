@@ -1,4 +1,5 @@
 let mysql = require('mysql');
+const util = require("util");
 const assert = require("./utils.js").assert;
 
 class Kaartenbak {
@@ -19,6 +20,8 @@ class Kaartenbak {
                 console.log('Connected!');
             }
         });
+
+        this.connection.query = util.promisify(this.connection.query) // Magic happens here.
     }
 
 
