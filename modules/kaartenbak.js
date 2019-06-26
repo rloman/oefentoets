@@ -1,4 +1,5 @@
 let mysql = require('mysql');
+const assert = require("./utils.js").assert;
 
 class Kaartenbak {
 
@@ -29,7 +30,8 @@ class Kaartenbak {
     async query(sql, args) {
         try {
             let rows = await this.connection.query(sql, args);
-            // console.log(rows);
+            assert(rows);
+             console.log(rows);
             console.log(typeof(rows));
             // process.exit();
 
@@ -45,7 +47,7 @@ class Kaartenbak {
         try {
             let result =  await this.connection.query("insert into tocht set ?", [tocht]);
 
-            let id = result.id;
+            let id = result.insertId;
             return id;
         }
         catch(error) {
