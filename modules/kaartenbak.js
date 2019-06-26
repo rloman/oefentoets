@@ -20,45 +20,7 @@ class Kaartenbak {
                 console.log('Connected!');
             }
         });
-
-        this.connection.query = util.promisify(this.connection.query) // Magic happens here.
-    }
-
-
-    // normal 
-    demoray(tocht) {
-        this.connection.query("insert into tocht set ?", [tocht], function (err, result) {
-            assert(result);
-            assert(result.insertId);
-            let id = result.insertId;
-            if (!err) {
-                tocht.id = result.insertId;
-                id = result.insertId;
-                console.log(id);
-
-                return id;
-            }
-            else {
-                throw err;
-            }
-        });
-    }
-
-    // new using async await and getting a (simulated) synchronous result
-    async demoray2(tocht) {
-
-        let result = await this.connection.query("insert into tocht set ?", [tocht]);
-
-        tocht.id = result.insertId;
-
-        return tocht;
-    }
-
-    // new a list
-    async demoray3List() {
-        let all = await this.connection.query("select * from tocht;");
-
-        return all;
+        this.connection.query = util.promisify(this.connection.query); // Magic happens here.
     }
 
     stop() {
@@ -78,6 +40,7 @@ class Kaartenbak {
 
         let id = result.insertId;
         tocht.id = id;
+
         return tocht;
     }
 
@@ -105,8 +68,8 @@ class Kaartenbak {
 
     async getTochten() {
 
-        let rows = await this.connection.query("select * from tocht");
-        return rows;
+        let tochten = await this.connection.query("select * from tocht");
+        return tochten;
     }
 
     async getTocht(id) { // be aware: returns a Promise
@@ -116,7 +79,7 @@ class Kaartenbak {
             return tocht;
         }
         else {
-            throw new Error("Duplate tocht found for row with id: " + id);
+            throw new Error("Duplicate tocht found for row with id: " + id);
         }
     }
 

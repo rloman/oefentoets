@@ -8,14 +8,8 @@ let assert = require("./modules/utils").assert;
 
 console.log("Starting main ... ");
 
-/*
-(async () => {
-    let response = await fetch('/article/promise-chaining/user.json');
-    let user = await response.json();
-    // ...
-  })();
 
-  */
+
 // clear all (for demo)
 (async () => {
     try {
