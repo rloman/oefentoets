@@ -25,6 +25,7 @@ class Kaartenbak {
     }
 
 
+    // normal 
     demoray(tocht) {
         this.connection.query("insert into tocht set ?", [tocht], function (err, result) {
             assert(result);
@@ -43,6 +44,7 @@ class Kaartenbak {
         });
     }
 
+    // new using async await and getting a (simulated) synchronous result
     async demoray2(tocht) {
 
         let result = await this.connection.query("insert into tocht set ?", [tocht]);
@@ -51,6 +53,7 @@ class Kaartenbak {
         console.log(result.insertId)
     }
 
+    // new a list
     async demoray3List() {
         let all = await this.connection.query("select * from tocht;");
 
