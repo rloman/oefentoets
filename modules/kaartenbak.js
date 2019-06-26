@@ -27,30 +27,30 @@ class Kaartenbak {
     }
 
     async query(sql, args) {
-        return new Promise((resolve, reject) => {
-            this.connection.query(sql, args, (err, rows) => { // be aware: the mysql connect.query returns error first and the rows
-                if (!err) {
-                    resolve(rows);
-                }
-                else {
-                    reject(err);
-                }
-            });
-        });
+        try {
+            let rows = await this.connection.query(sql, args);
+            // console.log(rows);
+            console.log(typeof(rows));
+            // process.exit();
+
+            return rows;
+        }
+        catch(error) {
+            throw error;
+        }
+           
     }
 
-    insert(tocht) { // might refactor this to return the Promise and get the id als the key (in fact I am doing this)
-        return new Promise((resolve, reject) => {
-            this.connection.query("insert into tocht set ?", [tocht], (err, result) => {
-                if (!err) {
-                    tocht.id = result.insertId;
-                    resolve(tocht);
-                }
-                else {
-                    reject(err);
-                }
-            });
-        });
+    async insert(tocht) { // might refactor this to return the Promise and get the id als the key (in fact I am doing this)
+        try {
+            let result =  await this.connection.query("insert into tocht set ?", [tocht]);
+
+            let id = result.id;
+            return id;
+        }
+        catch(error) {
+            throw error;
+        }
     }
 
     createTocht(start) {
