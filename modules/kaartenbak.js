@@ -22,10 +22,10 @@ class Kaartenbak {
     }
 
 
-    async demoray(){
+    async demoray(tocht){
         try {
             console.log("Before");
-            this.connection.query("select * from tocht",  function (err, result ,fields) {
+            this.connection.query("insert into tocht set [?]", tocht, function (err, result ,fields) {
                 console.log("in callback");
                 assert(result);
                 console.log(result);

@@ -30,6 +30,10 @@ console.log("Starting main ... ");
         console.log("Unable to remove tochts for reason: " + error);
     }
 
-    await kaartenBak.demoray();
+    let tocht = {
+        start: new Date()
+    };
+    
+    await kaartenBak.demoray(tocht);
 })();
 
