@@ -23,12 +23,6 @@ class Kaartenbak {
         this.connection.query = util.promisify(this.connection.query); // Magic happens here.
     }
 
-    stop() {
-        this.connection.end(function () {
-            console.log("Ending the connection ... Bye ... ");
-        });
-    }
-
     async query(sql, args) {
         let rows = await this.connection.query(sql, args);
 
@@ -101,6 +95,12 @@ class Kaartenbak {
         let result = await this.connection.query("truncate table tocht");
 
         return !!result;
+    }
+
+    stop() {
+        this.connection.end(function () {
+            console.log("Ending the connection ... Bye ... ");
+        });
     }
 }
 
