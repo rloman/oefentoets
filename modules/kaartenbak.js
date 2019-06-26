@@ -43,6 +43,23 @@ class Kaartenbak {
         });
     }
 
+    async demoray2(tocht) {
+
+        let result = await this.connection.query("insert into tocht set ?", [tocht]);
+
+        console.log(result);
+        console.log(result.insertId)
+    }
+
+    async demoray3List() {
+        let all = await this.connection.query("select * from tocht;");
+
+        for(let element of all) {
+            console.log(element);
+            console.log(element.id)
+        }
+    }
+
     stop() {
         this.connection.end(function () {
             console.log("Ending the connection ... Bye ... ");

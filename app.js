@@ -35,6 +35,8 @@ console.log("Starting main ... ");
     };
     
     kaartenBak.demoray(tocht);
+    kaartenBak.demoray2(tocht);
+    kaartenBak.demoray3List();
     kaartenBak.stop();
 })();
 
