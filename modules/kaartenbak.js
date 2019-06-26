@@ -77,7 +77,8 @@ class Kaartenbak {
         let result = await this.connection.query("insert into tocht set ?", [tocht]);
 
         let id = result.insertId;
-        return id;
+        tocht.id = id;
+        return tocht;
     }
 
     async createTocht(start) {
