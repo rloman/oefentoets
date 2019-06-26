@@ -1,4 +1,6 @@
 let mysql = require('mysql');
+const util = require("util");
+const assert = require("./utils.js").assert;
 
 class Kaartenbak {
 
@@ -18,50 +20,32 @@ class Kaartenbak {
                 console.log('Connected!');
             }
         });
+        this.connection.query = util.promisify(this.connection.query); // Magic happens here.
     }
 
-    stop() {
-        this.connection.end(function () {
-            console.log("Ending the connection ... Bye ... ");
-        });
+    async query(sql, args) {
+        let rows = await this.connection.query(sql, args);
+
+        return rows;
     }
 
-    query(sql, args) {
-        return new Promise((resolve, reject) => {
-            this.connection.query(sql, args, (err, rows) => { // be aware: the mysql connect.query returns error first and the rows
-                if (!err) {
-                    resolve(rows);
-                }
-                else {
-                    reject(err);
-                }
-            });
-        });
+    async insert(tocht) { // might refactor this to return the Promise and get the id als the key (in fact I am doing this)
+        let result = await this.connection.query("insert into tocht set ?", [tocht]);
+
+        let id = result.insertId;
+        tocht.id = id;
+
+        return tocht;
     }
 
-    insert(tocht) { // might refactor this to return the Promise and get the id als the key (in fact I am doing this)
-        return new Promise((resolve, reject) => {
-            this.connection.query("insert into tocht set ?", [tocht], (err, result) => {
-                if (!err) {
-                    tocht.id = result.insertId;
-                    resolve(tocht);
-                }
-                else {
-                    reject(err);
-                }
-            });
-        });
-    }
-
-    createTocht(start) {
-        // let tocht = insert(start);
+    async createTocht(start) {
         let tocht = {
             start: start
         }
-        return this.insert(tocht);
+        return await this.insert(tocht);
     }
 
-    insertAlternate(start) {
+    async insertAlternate(start) {
 
         const tocht = {
             start: start
@@ -69,99 +53,55 @@ class Kaartenbak {
 
         // use an array function here instead of function() since else this.connection would be undefined
         // better said: an arrow function has lexical scope. here, this is the kaartenbak (hence this.connection is reachable)
-        return new Promise((resolve, reject) => {
-            this.connection.query("insert into tocht set ?", [tocht], (error, result) => {
-                if (!error) {
-                    console.log("in my thing rloman");
-                    tocht.id = result.insertId;
+        let result = await this.connection.query("insert into tocht set ?", [tocht]);
+        tocht.id = result.insertId;
 
-                    resolve(tocht);
-                }
-                else {
-                    reject(err);
-                }
-            })
-        });
+        return tocht;
+
     }
 
-    getTochten() {
-        // return this.query("select * from tocht");
+    async getTochten() {
 
-        return new Promise((resolve, reject) => {
-            this.connection.query("select * from tocht", function (error, rows) {
-                if (!error) {
-                    resolve(rows);
-                }
-                else {
-                    reject(error);
-                }
-
-
-            })
-        });
+        let tochten = await this.connection.query("select * from tocht");
+        return tochten;
     }
 
-    getTocht(id) { // be aware: returns a Promise
-        return new Promise((resolve, reject) => {
-            this.connection.query("select * from tocht where id='?'", [id], (error, rows) => {
-                if(!error) {
-                    let tocht = rows[0];
-                    if(tocht) {
-                        resolve(tocht);
-                    }
-                    else {
-                        reject(404);
-                    }
-                }
-                else {
-                    reject(error);
-                }
-            });
-        });
+    async getTocht(id) { // be aware: returns a Promise
+        let rows = await this.connection.query("select * from tocht where id='?'", [id]);
+        let tocht = rows[0];
+        if (tocht) {
+            return tocht;
+        }
+        else {
+            throw new Error("Duplicate tocht found for row with id: " + id);
+        }
     }
 
-    deleteTochtById(id) {
-        return new Promise((resolve, reject) => {
-            this.connection.query("delete from tocht where id='?'", id, function (error, result) {
-                if (!error) {
-                    resolve(result.affectedRows === 1);
-                }
-                else {
-                    reject(false);
-                }
-            });
-        });
+
+    async deleteTochtById(id) {
+        let result = await this.connection.query("delete from tocht where id='?'", id);
+        return result.affectedRows === 1;
     }
 
-    beeindigTocht(id) {
+    async beeindigTocht(id) {
         let end = new Date();
 
-        return new Promise((resolve, reject) => {
-            this.connection.query("update tocht set end=? where id=?", [end, id], (error, result) => {
-                if (!error) {
-                    resolve(result.affectedRows === 1);
-                }
-                else {
-                    reject(false);
-                }
-            })
-        });
+        let result = await this.connection.query("update tocht set end=? where id=?", [end, id]);
+
+        return result.affectedRows === 1;
     }
 
-    removeAll() {
-        return new Promise((resolve, reject) => {
-            this.connection.query("truncate table tocht", (error, result) => {
-                if (!error) {
-                    resolve(true);
-                }
-                else {
-                    reject(error);
-                }
-            });
+    async removeAll() {
+        let result = await this.connection.query("truncate table tocht");
+
+        return !!result;
+    }
+
+    stop() {
+        this.connection.end(function () {
+            console.log("Ending the connection ... Bye ... ");
         });
     }
 }
-
-
 
 module.exports = new Kaartenbak();
