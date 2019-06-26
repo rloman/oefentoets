@@ -22,37 +22,22 @@ class Kaartenbak {
     }
 
 
-    demoray(tocht){
-
-        let id = 113;
-        try {
-            console.log("Before");
-           let rows = await this.connection.query("insert into tocht set ?", [tocht], function (err, result ,fields) {
-                console.log("in callback");
-                assert(result);
-                console.log(result);
-                // process.exit();
-                assert(result.insertId);
+    demoray(tocht) {
+        this.connection.query("insert into tocht set ?", [tocht], function (err, result) {
+            assert(result);
+            assert(result.insertId);
+            let id = result.insertId;
+            if (!err) {
+                tocht.id = result.insertId;
                 id = result.insertId;
-                console.log("id is: "+id)
-                // console.log(id);
-                if (!err) {
-                    console.log(result.insertId);
-                    tocht.id = result.insertId;
-                   console.log(id);
-                   id = result.insertId;
-                }
-                else {
-                  throw err;
-                }
-            });
-            console.log("After");
-        }
-        catch (error) {
-            throw error;
-        }
+                console.log(id);
 
-        return id;
+                return id;
+            }
+            else {
+                throw err;
+            }
+        });
     }
 
     stop() {
@@ -65,26 +50,26 @@ class Kaartenbak {
         try {
             let rows = await this.connection.query(sql, args);
             assert(rows);
-             console.log(rows);
-            console.log(typeof(rows));
+            console.log(rows);
+            console.log(typeof (rows));
             // process.exit();
 
             return rows;
         }
-        catch(error) {
+        catch (error) {
             throw error;
         }
-           
+
     }
 
     async insert(tocht) { // might refactor this to return the Promise and get the id als the key (in fact I am doing this)
         try {
-            let result =  await this.connection.query("insert into tocht set ?", [tocht]);
+            let result = await this.connection.query("insert into tocht set ?", [tocht]);
 
             let id = result.insertId;
             return id;
         }
-        catch(error) {
+        catch (error) {
             throw error;
         }
     }
@@ -140,9 +125,9 @@ class Kaartenbak {
     getTocht(id) { // be aware: returns a Promise
         return new Promise((resolve, reject) => {
             this.connection.query("select * from tocht where id='?'", [id], (error, rows) => {
-                if(!error) {
+                if (!error) {
                     let tocht = rows[0];
-                    if(tocht) {
+                    if (tocht) {
                         resolve(tocht);
                     }
                     else {
