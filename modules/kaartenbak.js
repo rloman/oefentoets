@@ -21,6 +21,35 @@ class Kaartenbak {
         });
     }
 
+
+    async demoray(){
+        try {
+            console.log("Before");
+            this.connection.query("select * from tocht",  function (err, result ,fields) {
+                console.log("in callback");
+                assert(result);
+                console.log(result);
+                process.exit();
+                assert(result.insertId);
+                let id = result.insertId;
+                // console.log(id);
+                if (!err) {
+                    console.log(result.insertId);
+                    tocht.id = result.insertId;
+                   console.log(id);
+                }
+                else {
+                  throw err;
+                }
+            });
+            console.log("After");
+        }
+        catch (error) {
+            throw error;
+        }
+    
+    }
+
     stop() {
         this.connection.end(function () {
             console.log("Ending the connection ... Bye ... ");
