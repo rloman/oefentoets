@@ -49,18 +49,16 @@ class Kaartenbak {
 
         let result = await this.connection.query("insert into tocht set ?", [tocht]);
 
-        console.log(result);
-        console.log(result.insertId)
+        tocht.id = result.insertId;
+
+        return tocht;
     }
 
     // new a list
     async demoray3List() {
         let all = await this.connection.query("select * from tocht;");
 
-        for (let element of all) {
-            console.log(element);
-            console.log(element.id)
-        }
+        return all;
     }
 
     stop() {
@@ -132,7 +130,7 @@ class Kaartenbak {
 
         let result = await this.connection.query("update tocht set end=? where id=?", [end, id]);
 
-        return result.affectedRows === 1);
+        return result.affectedRows === 1;
     }
 
     async removeAll() {

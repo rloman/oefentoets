@@ -35,8 +35,14 @@ console.log("Starting main ... ");
     };
     
     kaartenBak.demoray(tocht);
-    kaartenBak.demoray2(tocht);
-    kaartenBak.demoray3List();
+    let tochtCreated = await kaartenBak.demoray2(tocht);
+    assert(tochtCreated);
+    assert(tochtCreated.id > 0)
+    let allRows = await kaartenBak.demoray3List();
+    for(let tocht of allRows) {
+        console.log(tocht.id)
+        assert(tocht.id > 0);
+    }
     kaartenBak.stop();
 })();
 
