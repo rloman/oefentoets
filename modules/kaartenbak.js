@@ -22,21 +22,25 @@ class Kaartenbak {
     }
 
 
-    async demoray(tocht){
+    demoray(tocht){
+
+        let id = 113;
         try {
             console.log("Before");
-            this.connection.query("insert into tocht set [?]", tocht, function (err, result ,fields) {
+           let rows = await this.connection.query("insert into tocht set ?", [tocht], function (err, result ,fields) {
                 console.log("in callback");
                 assert(result);
                 console.log(result);
-                process.exit();
+                // process.exit();
                 assert(result.insertId);
-                let id = result.insertId;
+                id = result.insertId;
+                console.log("id is: "+id)
                 // console.log(id);
                 if (!err) {
                     console.log(result.insertId);
                     tocht.id = result.insertId;
                    console.log(id);
+                   id = result.insertId;
                 }
                 else {
                   throw err;
@@ -47,7 +51,8 @@ class Kaartenbak {
         catch (error) {
             throw error;
         }
-    
+
+        return id;
     }
 
     stop() {

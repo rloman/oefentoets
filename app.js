@@ -34,6 +34,7 @@ console.log("Starting main ... ");
         start: new Date()
     };
     
-    await kaartenBak.demoray(tocht);
+    let id  = kaartenBak.demoray(tocht);
+    console.log("eind "+id)
 })();
 
