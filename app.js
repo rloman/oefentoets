@@ -13,7 +13,7 @@ console.log("Starting main ... ");
 // clear all (for demo)
 (async () => {
     try {
-        let result = await repository.removeAll();
+        let result = await repository.deleteAll();
         assert(result, "Result should be truthy");
         assert( !result.then, "fout in return");
         if(result) {
@@ -55,7 +55,7 @@ console.log("Starting main ... ");
     }
     
     try {
-        let createdTocht = await repository.insertAlternate(new Date());
+        let createdTocht = await repository.createWithStartDate(new Date());
         assert(true);
         console.log(createdTocht.id);
     }
@@ -65,7 +65,7 @@ console.log("Starting main ... ");
     }
        
     try {
-        let tocht = await repository.createTocht(new Date());
+        let tocht = await repository.createWithStartDate(new Date());
         assert(0 !== tocht.id);
         console.log("Created a tocht with id:" + tocht.id);
     }
@@ -75,7 +75,7 @@ console.log("Starting main ... ");
     }
 
     try {
-        let rows = await repository.getTochten();
+        let rows = await repository.findAll();
         for (let row of rows) {
             console.log(row.id + ", " + row.start);
         }
@@ -86,7 +86,7 @@ console.log("Starting main ... ");
     }
 
     try {
-        let rows = await repository.getTochten();
+        let rows = await repository.findAll();
         let counter = 0;
         for (let tocht of rows) {
             counter++;
@@ -103,7 +103,7 @@ console.log("Starting main ... ");
     const victim = 3;
 
     try {
-        let tocht = await repository.getTocht(victim);
+        let tocht = await repository.findById(victim);
         if(tocht) {
             console.log("Tocht met id: " + tocht.id + " heeft startmoment " + tocht.start);
         }
@@ -118,7 +118,7 @@ console.log("Starting main ... ");
     }
 
     try {
-        let result = await repository.deleteTochtById(victim);
+        let result = await repository.deleteById(victim);
         console.log("Tocht with id: " + victim + " is" + (result ? "" : " not") + " deleted");
     }
     catch(error) {
@@ -127,7 +127,7 @@ console.log("Starting main ... ");
     }
 
     try {
-        let result = await repository.beeindigTocht(1); // 1 is there~~~???~?~?
+        let result = await repository.endTocht(1); // 1 is there~~~???~?~?
         console.log("Last method: Updated with ending expected:true, actual:" + result);
         assert (result);// since there is no tocht with id 1000
         
@@ -138,7 +138,7 @@ console.log("Starting main ... ");
     }
 
     try {
-        let result = await repository.beeindigTocht(1000);
+        let result = await repository.endTocht(1000);
         console.log("Last method: Updated with ending expected:false, actual:" + result);
         assert (!result);// since there is no tocht with id 1000
        
