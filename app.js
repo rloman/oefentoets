@@ -3,7 +3,7 @@
 
 
 let Tocht = require('./modules/tocht');
-let kaartenBak = require('./modules/repository');
+let repository = require('./modules/repository');
 let assert = require("./modules/utils").assert;
 
 console.log("Starting main ... ");
@@ -13,7 +13,7 @@ console.log("Starting main ... ");
 // clear all (for demo)
 (async () => {
     try {
-        let result = await kaartenBak.removeAll();
+        let result = await repository.removeAll();
         assert(result, "Result should be truthy");
         assert( !result.then, "fout in return");
         if(result) {
@@ -29,7 +29,7 @@ console.log("Starting main ... ");
     };
     
     try {
-        let createdTocht = await kaartenBak.insert(tocht);
+        let createdTocht = await repository.insert(tocht);
         console.log("Created tocht: >" + createdTocht.id + "<");
             assert(0 !== createdTocht.id, "The id of tocht should not be zero");
             assert(1 <=  createdTocht.id)
@@ -42,7 +42,7 @@ console.log("Starting main ... ");
    
 
     try {
-        let result = await kaartenBak.query('insert into tocht set ?', [tocht]);
+        let result = await repository.query('insert into tocht set ?', [tocht]);
 
         assert(result);
         console.log("Inserted tocht with id:" + result.insertId);
@@ -55,7 +55,7 @@ console.log("Starting main ... ");
     }
     
     try {
-        let createdTocht = await kaartenBak.insertAlternate(new Date());
+        let createdTocht = await repository.insertAlternate(new Date());
         assert(true);
         console.log(createdTocht.id);
     }
@@ -65,7 +65,7 @@ console.log("Starting main ... ");
     }
        
     try {
-        let tocht = await kaartenBak.createTocht(new Date());
+        let tocht = await repository.createTocht(new Date());
         assert(0 !== tocht.id);
         console.log("Created a tocht with id:" + tocht.id);
     }
@@ -75,7 +75,7 @@ console.log("Starting main ... ");
     }
 
     try {
-        let rows = await kaartenBak.getTochten();
+        let rows = await repository.getTochten();
         for (let row of rows) {
             console.log(row.id + ", " + row.start);
         }
@@ -86,7 +86,7 @@ console.log("Starting main ... ");
     }
 
     try {
-        let rows = await kaartenBak.getTochten();
+        let rows = await repository.getTochten();
         let counter = 0;
         for (let tocht of rows) {
             counter++;
@@ -103,7 +103,7 @@ console.log("Starting main ... ");
     const victim = 3;
 
     try {
-        let tocht = await kaartenBak.getTocht(victim);
+        let tocht = await repository.getTocht(victim);
         if(tocht) {
             console.log("Tocht met id: " + tocht.id + " heeft startmoment " + tocht.start);
         }
@@ -118,7 +118,7 @@ console.log("Starting main ... ");
     }
 
     try {
-        let result = await kaartenBak.deleteTochtById(victim);
+        let result = await repository.deleteTochtById(victim);
         console.log("Tocht with id: " + victim + " is" + (result ? "" : " not") + " deleted");
     }
     catch(error) {
@@ -127,7 +127,7 @@ console.log("Starting main ... ");
     }
 
     try {
-        let result = await kaartenBak.beeindigTocht(1); // 1 is there~~~???~?~?
+        let result = await repository.beeindigTocht(1); // 1 is there~~~???~?~?
         console.log("Last method: Updated with ending expected:true, actual:" + result);
         assert (result);// since there is no tocht with id 1000
         
@@ -138,7 +138,7 @@ console.log("Starting main ... ");
     }
 
     try {
-        let result = await kaartenBak.beeindigTocht(1000);
+        let result = await repository.beeindigTocht(1000);
         console.log("Last method: Updated with ending expected:false, actual:" + result);
         assert (!result);// since there is no tocht with id 1000
        
@@ -148,6 +148,6 @@ console.log("Starting main ... ");
         console.log("Some error occured " + error);
     }
         
-    kaartenBak.stop();
+    repository.stop();
 })();
 
