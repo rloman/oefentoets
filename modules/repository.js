@@ -23,6 +23,7 @@ class Repository {
         this.connection.query = util.promisify(this.connection.query); // Magic happens here.
     }
 
+    // used private!!!
     async query(sql, args) {
         let rows = await this.connection.query(sql, args);
 
@@ -38,14 +39,14 @@ class Repository {
         return tocht;
     }
 
-    async createTocht(start) {
+    async create(start) {
         let tocht = {
             start: start
         }
         return await this.insert(tocht);
     }
 
-    async insertAlternate(start) {
+    async createWithStartDate(start) {
 
         const tocht = {
             start: start
@@ -60,13 +61,13 @@ class Repository {
 
     }
 
-    async getTochten() {
+    async findAll() {
 
         let tochten = await this.connection.query("select * from tocht");
         return tochten;
     }
 
-    async getTocht(id) { // be aware: returns a Promise
+    async findById(id) { // be aware: returns a Promise
         let rows = await this.connection.query("select * from tocht where id='?'", [id]);
         let tocht = rows[0];
         if (tocht) {
@@ -78,12 +79,12 @@ class Repository {
     }
 
 
-    async deleteTochtById(id) {
+    async deleteById(id) {
         let result = await this.connection.query("delete from tocht where id='?'", id);
         return result.affectedRows === 1;
     }
 
-    async beeindigTocht(id) {
+    async endTocht(id) {
         let end = new Date();
 
         let result = await this.connection.query("update tocht set end=? where id=?", [end, id]);
@@ -91,7 +92,7 @@ class Repository {
         return result.affectedRows === 1;
     }
 
-    async removeAll() {
+    async deleteAll() {
         let result = await this.connection.query("truncate table tocht");
 
         return !!result;
