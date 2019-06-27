@@ -3,7 +3,7 @@
 
 
 let Tocht = require('./modules/tocht');
-let kaartenBak = require('./modules/kaartenbak');
+let kaartenBak = require('./modules/repository');
 let assert = require("./modules/utils").assert;
 
 console.log("Starting main ... ");

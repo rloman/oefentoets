@@ -2,7 +2,7 @@ let mysql = require('mysql');
 const util = require("util");
 const assert = require("./utils.js").assert;
 
-class Kaartenbak {
+class Repository {
 
     constructor() {
         // create a MySQL connection
@@ -104,4 +104,4 @@ class Kaartenbak {
     }
 }
 
-module.exports = new Kaartenbak();
+module.exports = new Repository();
