@@ -1,1 +1,1 @@
-../../issues/oefentoets-spectrum/issues.txt
+/home/rloman/repo/issues/oefentoets-spectrum/issues.txt

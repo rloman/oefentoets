@@ -1,1 +1,1 @@
-../../release-notes-generator/releasenotes.js
+/home/rloman/repo/release-notes-generator/releasenotes.js

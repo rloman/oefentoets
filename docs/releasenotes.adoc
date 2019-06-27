@@ -1,9 +1,17 @@
 == News Flash
 
-.22-02-2019
-* Released version v1.0.0
+.26-06-2019
+* Released version v1.1.0
 
 == Release notes
+
+.v1.1.0 (26-06-2019)
+* Refactor Promise to async await for kaartenBak.js
+* Refactor Promise to async await for app.js
+* Refactor assert to module function
+* Some assert to validate myself
+* Change export of module kaartenbak from class to instance
+* Fix the links
 
 .v1.0.0 (22-02-2019)
 * Refactor the (bad) usage of then(s) to good usage of then(function, function)
