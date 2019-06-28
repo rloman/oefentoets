@@ -21,7 +21,7 @@
 * Move some (for reference) files to old
 * Refactor kaartenbak class in app.js file to module
 * Finally all rocking with some gold plating to do
-* Rocker voor app.js met getTochten() (was al OK) en nu ook getTocht(id)
+* Rocker voor app.js met getTrips() (was al OK) en nu ook getTrip(id)
 * Having a rocking situation. Even in app.js so it finally rocks
 * Delete node_modules from repo. Amend .gitignore
 * With a lot of hassle have running test.js (and NOT an app.js)
