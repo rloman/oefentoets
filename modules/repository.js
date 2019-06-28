@@ -63,8 +63,8 @@ class Repository {
 
     async findAll() {
 
-        let tochten = await this.connection.query("select * from tocht");
-        return tochten;
+        let trips = await this.connection.query("select * from tocht");
+        return trips;
     }
 
     async findById(id) { // be aware: returns a Promise

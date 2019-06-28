@@ -17,7 +17,7 @@ console.log("Starting main ... ");
         assert(result, "Result should be truthy");
         assert( !result.then, "fout in return");
         if(result) {
-            console.log(`Removed all tochten`);
+            console.log(`Removed all trips`);
         }
     }
     catch (err) {
