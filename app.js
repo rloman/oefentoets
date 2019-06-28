@@ -29,7 +29,7 @@ console.log("Starting main ... ");
     };
     
     try {
-        let createdTrip = await repository.insert(trip);
+        let createdTrip = await repository.create(trip);
         console.log("Created trip: >" + createdTrip.id + "<");
             assert(0 !== createdTrip.id, "The id of trip should not be zero");
             assert(1 <=  createdTrip.id)
@@ -55,7 +55,10 @@ console.log("Starting main ... ");
     }
     
     try {
-        let createdTrip = await repository.createWithStartDate(new Date());
+        let tobeCreatedTrip =  {
+            start: new Date()
+        }
+        let createdTrip = await repository.create(tobeCreatedTrip);
         assert(true);
         console.log(createdTrip.id);
     }
@@ -65,7 +68,10 @@ console.log("Starting main ... ");
     }
        
     try {
-        let trip = await repository.createWithStartDate(new Date());
+        let tobeCreatedTrip =  {
+            start: new Date()
+        }
+        let trip = await repository.create(tobeCreatedTrip);
         assert(0 !== trip.id);
         console.log("Created a trip with id:" + trip.id);
     }
