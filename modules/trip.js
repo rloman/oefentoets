@@ -1,4 +1,4 @@
-module.exports = class Tocht {
+module.exports = class Trip {
 
     // start and end are both Date
     constructor(start) {
