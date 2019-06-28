@@ -1,9 +1,19 @@
 == News Flash
 
-.26-06-2019
-* Released version v1.1.0
+.28-06-2019
+* Released version v2.0.0
 
 == Release notes
+
+.v2.0.0 (28-06-2019)
+* Rename tocht to trip in trip.js
+* Rename Tochten to Trips and Tocht to Trip
+* Rename tochten to trips
+* Removed the trials folder
+* Refactor callers of the methods
+* All names cleaner
+* Rename variable kaartenBak to repository in app.js
+* Some rename of module and exports
 
 .v1.1.0 (26-06-2019)
 * Refactor Promise to async await for kaartenBak.js
@@ -21,7 +31,7 @@
 * Move some (for reference) files to old
 * Refactor kaartenbak class in app.js file to module
 * Finally all rocking with some gold plating to do
-* Rocker voor app.js met getTochten() (was al OK) en nu ook getTocht(id)
+* Rocker voor app.js met getTrips() (was al OK) en nu ook getTrip(id)
 * Having a rocking situation. Even in app.js so it finally rocks
 * Delete node_modules from repo. Amend .gitignore
 * With a lot of hassle have running test.js (and NOT an app.js)

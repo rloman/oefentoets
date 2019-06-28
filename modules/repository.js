@@ -2,7 +2,7 @@ let mysql = require('mysql');
 const util = require("util");
 const assert = require("./utils.js").assert;
 
-class Kaartenbak {
+class Repository {
 
     constructor() {
         // create a MySQL connection
@@ -23,76 +23,77 @@ class Kaartenbak {
         this.connection.query = util.promisify(this.connection.query); // Magic happens here.
     }
 
+    // used private!!!
     async query(sql, args) {
         let rows = await this.connection.query(sql, args);
 
         return rows;
     }
 
-    async insert(tocht) { // might refactor this to return the Promise and get the id als the key (in fact I am doing this)
-        let result = await this.connection.query("insert into tocht set ?", [tocht]);
+    async insert(trip) { // might refactor this to return the Promise and get the id als the key (in fact I am doing this)
+        let result = await this.connection.query("insert into trip set ?", [trip]);
 
         let id = result.insertId;
-        tocht.id = id;
+        trip.id = id;
 
-        return tocht;
+        return trip;
     }
 
-    async createTocht(start) {
-        let tocht = {
+    async create(start) {
+        let trip = {
             start: start
         }
-        return await this.insert(tocht);
+        return await this.insert(trip);
     }
 
-    async insertAlternate(start) {
+    async createWithStartDate(start) {
 
-        const tocht = {
+        const trip = {
             start: start
         };
 
         // use an array function here instead of function() since else this.connection would be undefined
         // better said: an arrow function has lexical scope. here, this is the kaartenbak (hence this.connection is reachable)
-        let result = await this.connection.query("insert into tocht set ?", [tocht]);
-        tocht.id = result.insertId;
+        let result = await this.connection.query("insert into trip set ?", [trip]);
+        trip.id = result.insertId;
 
-        return tocht;
+        return trip;
 
     }
 
-    async getTochten() {
+    async findAll() {
 
-        let tochten = await this.connection.query("select * from tocht");
-        return tochten;
+        let trips = await this.connection.query("select * from trip");
+        return trips;
     }
 
-    async getTocht(id) { // be aware: returns a Promise
-        let rows = await this.connection.query("select * from tocht where id='?'", [id]);
-        let tocht = rows[0];
-        if (tocht) {
-            return tocht;
+    async findById(id) { // be aware: returns a Promise
+        let rows = await this.connection.query("select * from trip where id='?'", [id]);
+        let trip = rows[0];
+        if (trip) {
+            return trip;
         }
         else {
-            throw new Error("Duplicate tocht found for row with id: " + id);
+            throw new Error("Duplicate trip found for row with id: " + id);
         }
     }
 
 
-    async deleteTochtById(id) {
-        let result = await this.connection.query("delete from tocht where id='?'", id);
+    async deleteById(id) {
+        let result = await this.connection.query("delete from trip where id='?'", id);
         return result.affectedRows === 1;
     }
 
-    async beeindigTocht(id) {
+    async endTrip(id) {
         let end = new Date();
 
-        let result = await this.connection.query("update tocht set end=? where id=?", [end, id]);
+        let result = await this.connection.query("update trip set end=? where id=?", [end, id]);
 
         return result.affectedRows === 1;
     }
 
-    async removeAll() {
-        let result = await this.connection.query("truncate table tocht");
+    async deleteAll() {
+        let result = await this.connection.query("truncate table trip");
 
         return !!result;
     }
@@ -104,4 +105,4 @@ class Kaartenbak {
     }
 }
 
-module.exports = new Kaartenbak();
+module.exports = new Repository();
