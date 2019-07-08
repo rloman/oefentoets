@@ -24,16 +24,15 @@ console.log("Starting main ... ");
         console.log("Unable to remove trips for reason: " + error);
     }
 
-    let trip = {
-        start: new Date()
-    };
-    
     try {
+        let trip = {
+            start: new Date()
+        };
         let createdTrip = await repository.create(trip);
         console.log("Created trip: >" + createdTrip.id + "<");
             assert(0 !== createdTrip.id, "The id of trip should not be zero");
             assert(1 <=  createdTrip.id)
-            trip.id = createdTrip.id+1;
+            // trip.id = createdTrip.id+1;
     }
     catch(error) {
         assert(false);
@@ -42,11 +41,14 @@ console.log("Starting main ... ");
    
 
     try {
-        let result = await repository.query('insert into trip set ?', [trip]);
+        let trip = {
+            start: new Date()
+        };
+        let result = await repository.create(trip);
 
         assert(result);
-        console.log("Inserted trip with id:" + result.insertId);
-        assert(result && result.insertId > 0);
+        console.log("Inserted trip with id:" + result.id);
+        assert(result && result.id > 0);
     }
 
     catch(error) {
@@ -66,20 +68,9 @@ console.log("Starting main ... ");
         assert(false);
         console.log("Foutje bedankt:" + error);
     }
-       
-    try {
-        let tobeCreatedTrip =  {
-            start: new Date()
-        }
-        let trip = await repository.create(tobeCreatedTrip);
-        assert(0 !== trip.id);
-        console.log("Created a trip with id:" + trip.id);
-    }
-    catch(error) {
-        assert(false);
-        console.log(error);
-    }
 
+    // created three trips now
+       
     try {
         let rows = await repository.findAll();
         for (let row of rows) {
