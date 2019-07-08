@@ -57,6 +57,15 @@ class Repository {
         }
     }
 
+    async updateById(id, data) {
+
+        let affectedRows = await this.connection.query("update trip set start=?, end=? where id=?", [data.start, data.end, id]);
+
+        let updatedTrip = await this.findById(id);
+
+        return updatedTrip;
+    }
+
 
     async endTrip(id) {
         let end = new Date();
