@@ -19,7 +19,6 @@ module.exports = class Trip {
 
     set start(start) {
         this._start = start;
-
     }
 
     get end() {

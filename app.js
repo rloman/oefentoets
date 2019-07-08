@@ -105,9 +105,9 @@ let Trip = require("./modules/trip");
         let updatedTrip = await service.updateById(targetId, target);
 
 
-        assert(targetId == updatedTrip.id);
-        assert(target.start.day == updatedTrip.start.day);
-        assert(target.end.month == updatedTrip.end.month);
+        assert(targetId === updatedTrip.id);
+        assert(target.start.day === updatedTrip.start.day);
+        assert(target.end.month === updatedTrip.end.month);
     }
     catch(error) {
         assert(false);
