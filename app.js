@@ -10,9 +10,9 @@ console.log("Starting main ... ");
 
 
 
-// clear all (for demo)
 (async () => {
     try {
+        // clear all (for demo)
         let result = await repository.deleteAll();
         assert(result, "Result should be truthy");
         assert( !result.then, "fout in return");
@@ -24,67 +24,26 @@ console.log("Starting main ... ");
         console.log("Unable to remove trips for reason: " + error);
     }
 
-    let trip = {
-        start: new Date()
-    };
-    
-    try {
-        let createdTrip = await repository.insert(trip);
-        console.log("Created trip: >" + createdTrip.id + "<");
-            assert(0 !== createdTrip.id, "The id of trip should not be zero");
-            assert(1 <=  createdTrip.id)
-            trip.id = createdTrip.id+1;
-    }
-    catch(error) {
-        assert(false);
-        console.log("Error: >" + error + "<");
-    }
-   
-
-    try {
-        let result = await repository.query('insert into trip set ?', [trip]);
-
-        assert(result);
-        console.log("Inserted trip with id:" + result.insertId);
-        assert(result && result.insertId > 0);
-    }
-
-    catch(error) {
-        console.log("Error: " + error);
-        assert(false);
-    }
-    
-    try {
-        let createdTrip = await repository.createWithStartDate(new Date());
-        assert(true);
-        console.log(createdTrip.id);
-    }
-    catch(error) {
-        assert(false);
-        console.log("Foutje bedankt:" + error);
-    }
-       
-    try {
-        let trip = await repository.createWithStartDate(new Date());
-        assert(0 !== trip.id);
-        console.log("Created a trip with id:" + trip.id);
-    }
-    catch(error) {
-        assert(false);
-        console.log(error);
-    }
-
-    try {
-        let rows = await repository.findAll();
-        for (let row of rows) {
-            console.log(row.id + ", " + row.start);
+    // create three trips
+    for(let i = 0;i<3;i++) {
+        try {
+            let trip = {
+                start: new Date()
+            };
+            let createdTrip = await repository.create(trip);
+            console.log("Created trip: >" + createdTrip.id + "<");
+                assert(0 !== createdTrip.id, "The id of trip should not be zero");
+                assert(1 <=  createdTrip.id)
+                // trip.id = createdTrip.id+1;
+        }
+        catch(error) {
+            assert(false);
+            console.log("Error: >" + error + "<");
         }
     }
-    catch(error) {
-        assert(false);
-        console.log(error);
-    }
+    // created three trips
 
+    // find all
     try {
         let rows = await repository.findAll();
         let counter = 0;
@@ -100,16 +59,16 @@ console.log("Starting main ... ");
         console.log(error);
     }
     
-    const victim = 3;
-
+    // find by id
     try {
-        let trip = await repository.findById(victim);
+        const target = 3;
+        let trip = await repository.findById(target);
         if(trip) {
             console.log("Trip met id: " + trip.id + " heeft startmoment " + trip.start);
         }
         else {
-            assert(false, "Geen toch gevonden met id: "+victim);
-            console.log("Trip with id: "+victim+" not found!");
+            assert(false, "Geen tocht gevonden met id: "+target);
+            console.log("Trip with id: "+target+" not found!");
         }
     }
     catch(error) {
@@ -117,15 +76,8 @@ console.log("Starting main ... ");
         console.log("Something went wrong since: " + error);
     }
 
-    try {
-        let result = await repository.deleteById(victim);
-        console.log("Trip with id: " + victim + " is" + (result ? "" : " not") + " deleted");
-    }
-    catch(error) {
-        assert(false);
-        console.log("Error again: " + error);
-    }
 
+    // end by id
     try {
         let result = await repository.endTrip(1); // 1 is there~~~???~?~?
         console.log("Last method: Updated with ending expected:true, actual:" + result);
@@ -146,6 +98,21 @@ console.log("Starting main ... ");
     catch(error) {
         assert(false);
         console.log("Some error occured " + error);
+    }
+
+    // delete by id
+    try {
+        const victim = 3;
+        let result = await repository.deleteById(victim);
+        console.log("Trip with id: " + victim + " is" + (result ? "" : " not") + " deleted");
+        assert(result);
+
+        assert(!await repository.findById(victim));
+        assert(!await repository.deleteById(victim));
+    }
+    catch(error) {
+        assert(false);
+        console.log("Error: " + error);
     }
         
     repository.stop();
