@@ -17,6 +17,10 @@ module.exports = class Trip {
         return this._start;
     }
 
+    set start(start) {
+        this._start = start;
+    }
+
     get end() {
         return this._end;
     }

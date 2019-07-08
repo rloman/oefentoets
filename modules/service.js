@@ -25,6 +25,10 @@ class Service {
         return await this.repository.findById(id);
     }
 
+    async updateById(id, data) {
+        return await this.repository.updateById(id, data);
+    }
+
 
     async endTrip(id) {
        return await this.repository.endTrip(id);

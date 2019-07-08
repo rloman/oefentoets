@@ -1,12 +1,13 @@
 'use strict';
 
 let assert = require("./modules/utils").assert;
+let Trip = require("./modules/trip");
 
 
 (async () => {
     console.log("Starting main ... ");
 
-    
+
     let service = require('./modules/service');
     try {
         // clear all (for demo)
@@ -88,6 +89,25 @@ let assert = require("./modules/utils").assert;
         console.log("Last method: Updated with ending expected:false, actual:" + result);
         assert (!result);// since there is no trip with id 1000
        
+    }
+    catch(error) {
+        assert(false);
+        console.log("Some error occured " + error);
+    }
+
+    //update by id
+    try {
+
+        let targetId = 3;
+        let target = new Trip();
+        target.start = new Date(2019, 5, 7);
+        target.end =  new Date(2019, 5, 7);
+        let updatedTrip = await service.updateById(targetId, target);
+
+
+        assert(targetId === updatedTrip.id);
+        assert(target.start.day === updatedTrip.start.day);
+        assert(target.end.month === updatedTrip.end.month);
     }
     catch(error) {
         assert(false);
