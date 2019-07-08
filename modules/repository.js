@@ -42,6 +42,7 @@ class Repository {
     async findAll() {
 
         let trips = await this.connection.query("select * from trip");
+
         return trips;
     }
 
@@ -52,7 +53,7 @@ class Repository {
             return trip;
         }
         else {
-            throw new Error("Duplicate trip found for row with id: " + id);
+          return false;
         }
     }
 
@@ -65,15 +66,16 @@ class Repository {
         return result.affectedRows === 1;
     }
 
+    async deleteById(id) {
+        let result = await this.connection.query("delete from trip where id='?'", id);
+        
+        return result.affectedRows === 1;
+    }
+
     async deleteAll() {
         let result = await this.connection.query("truncate table trip");
 
         return !!result;
-    }
-
-    async deleteById(id) {
-        let result = await this.connection.query("delete from trip where id='?'", id);
-        return result.affectedRows === 1;
     }
 
     stop() {

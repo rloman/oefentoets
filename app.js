@@ -76,16 +76,8 @@ console.log("Starting main ... ");
         console.log("Something went wrong since: " + error);
     }
 
-    try {
-        const victim = 3;
-        let result = await repository.deleteById(victim);
-        console.log("Trip with id: " + victim + " is" + (result ? "" : " not") + " deleted");
-    }
-    catch(error) {
-        assert(false);
-        console.log("Error again: " + error);
-    }
 
+    // end by id
     try {
         let result = await repository.endTrip(1); // 1 is there~~~???~?~?
         console.log("Last method: Updated with ending expected:true, actual:" + result);
@@ -106,6 +98,21 @@ console.log("Starting main ... ");
     catch(error) {
         assert(false);
         console.log("Some error occured " + error);
+    }
+
+    // delete by id
+    try {
+        const victim = 3;
+        let result = await repository.deleteById(victim);
+        console.log("Trip with id: " + victim + " is" + (result ? "" : " not") + " deleted");
+        assert(result);
+
+        assert(!await repository.findById(victim));
+        assert(!await repository.deleteById(victim));
+    }
+    catch(error) {
+        assert(false);
+        console.log("Error: " + error);
     }
         
     repository.stop();
