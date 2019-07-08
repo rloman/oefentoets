@@ -30,7 +30,7 @@ class Repository {
         return rows;
     }
 
-    async insert(trip) { // might refactor this to return the Promise and get the id als the key (in fact I am doing this)
+    async create(trip) { // might refactor this to return the Promise and get the id als the key (in fact I am doing this)
         let result = await this.connection.query("insert into trip set ?", [trip]);
 
         let id = result.insertId;
@@ -39,31 +39,10 @@ class Repository {
         return trip;
     }
 
-    async create(start) {
-        let trip = {
-            start: start
-        }
-        return await this.insert(trip);
-    }
-
-    async createWithStartDate(start) {
-
-        const trip = {
-            start: start
-        };
-
-        // use an array function here instead of function() since else this.connection would be undefined
-        // better said: an arrow function has lexical scope. here, this is the kaartenbak (hence this.connection is reachable)
-        let result = await this.connection.query("insert into trip set ?", [trip]);
-        trip.id = result.insertId;
-
-        return trip;
-
-    }
-
     async findAll() {
 
         let trips = await this.connection.query("select * from trip");
+
         return trips;
     }
 
@@ -74,21 +53,22 @@ class Repository {
             return trip;
         }
         else {
-            throw new Error("Duplicate trip found for row with id: " + id);
+          return false;
         }
     }
 
-
-    async deleteById(id) {
-        let result = await this.connection.query("delete from trip where id='?'", id);
-        return result.affectedRows === 1;
-    }
 
     async endTrip(id) {
         let end = new Date();
 
         let result = await this.connection.query("update trip set end=? where id=?", [end, id]);
 
+        return result.affectedRows === 1;
+    }
+
+    async deleteById(id) {
+        let result = await this.connection.query("delete from trip where id='?'", id);
+        
         return result.affectedRows === 1;
     }
 

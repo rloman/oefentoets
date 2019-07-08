@@ -1,9 +1,15 @@
 == News Flash
 
-.28-06-2019
-* Released version v2.0.0
+.08-07-2019
+* Released version v3.0.0
 
 == Release notes
+
+.v3.0.0 (08-07-2019)
+* Move and clean up
+* some rename
+* Use create instead of private repo method
+* Refactor and make simpler names of the repository methods
 
 .v2.0.0 (28-06-2019)
 * Rename tocht to trip in trip.js
