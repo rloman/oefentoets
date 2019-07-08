@@ -1,19 +1,16 @@
 'use strict';
 
-
-
-let Trip = require('./modules/trip');
-let repository = require('./modules/repository');
 let assert = require("./modules/utils").assert;
-
-console.log("Starting main ... ");
-
 
 
 (async () => {
+    console.log("Starting main ... ");
+
+    
+    let service = require('./modules/service');
     try {
         // clear all (for demo)
-        let result = await repository.deleteAll();
+        let result = await service.deleteAll();
         assert(result, "Result should be truthy");
         assert( !result.then, "fout in return");
         if(result) {
@@ -27,10 +24,7 @@ console.log("Starting main ... ");
     // create three trips
     for(let i = 0;i<3;i++) {
         try {
-            let trip = {
-                start: new Date()
-            };
-            let createdTrip = await repository.create(trip);
+            let createdTrip = await service.create();
             console.log("Created trip: >" + createdTrip.id + "<");
                 assert(0 !== createdTrip.id, "The id of trip should not be zero");
                 assert(1 <=  createdTrip.id)
@@ -45,7 +39,7 @@ console.log("Starting main ... ");
 
     // find all
     try {
-        let rows = await repository.findAll();
+        let rows = await service.findAll();
         let counter = 0;
         for (let trip of rows) {
             counter++;
@@ -62,7 +56,7 @@ console.log("Starting main ... ");
     // find by id
     try {
         const target = 3;
-        let trip = await repository.findById(target);
+        let trip = await service.findById(target);
         if(trip) {
             console.log("Trip met id: " + trip.id + " heeft startmoment " + trip.start);
         }
@@ -79,7 +73,7 @@ console.log("Starting main ... ");
 
     // end by id
     try {
-        let result = await repository.endTrip(1); // 1 is there~~~???~?~?
+        let result = await service.endTrip(1); // 1 is there~~~???~?~?
         console.log("Last method: Updated with ending expected:true, actual:" + result);
         assert (result);// since there is no trip with id 1000
         
@@ -90,7 +84,7 @@ console.log("Starting main ... ");
     }
 
     try {
-        let result = await repository.endTrip(1000);
+        let result = await service.endTrip(1000);
         console.log("Last method: Updated with ending expected:false, actual:" + result);
         assert (!result);// since there is no trip with id 1000
        
@@ -103,18 +97,18 @@ console.log("Starting main ... ");
     // delete by id
     try {
         const victim = 3;
-        let result = await repository.deleteById(victim);
+        let result = await service.deleteById(victim);
         console.log("Trip with id: " + victim + " is" + (result ? "" : " not") + " deleted");
         assert(result);
 
-        assert(!await repository.findById(victim));
-        assert(!await repository.deleteById(victim));
+        assert(!await service.findById(victim));
+        assert(!await service.deleteById(victim));
     }
     catch(error) {
         assert(false);
         console.log("Error: " + error);
     }
         
-    repository.stop();
+    service.stop();
 })();
 
