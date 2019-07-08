@@ -4,9 +4,7 @@ const assert = require("./utils.js").assert;
 class Service {
 
     constructor() {
-
-        let repository = require("./repository");
-        this.repository = repository;
+        this.repository = require("./repository");
     }
 
 
