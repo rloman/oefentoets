@@ -1,16 +1,13 @@
 'use strict';
 
-
-
-let Trip = require('./modules/trip');
-let service = require('./modules/service');
 let assert = require("./modules/utils").assert;
-
-console.log("Starting main ... ");
-
 
 
 (async () => {
+    console.log("Starting main ... ");
+
+    
+    let service = require('./modules/service');
     try {
         // clear all (for demo)
         let result = await service.deleteAll();
