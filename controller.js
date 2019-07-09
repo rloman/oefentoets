@@ -64,14 +64,11 @@ app.post('/api/trips', async function(req, res) {
 });
 
 // put
-app.put('/api/users/:id', async function(req, res) {
+app.put('/api/trips/:id', async function(req, res) {
 
   // First read id from params
   let id = +req.params.id
   let inputTrip = req.body;
-
-  console.log("Received username: "+inputTrip.name);
-  console.log("Received email: "+inputTrip.email);
 
   let updatedUser = await service.updateById(id, inputTrip);
 
