@@ -95,6 +95,18 @@ app.delete('/api/trips/:id', async function (req, res) {
   }
 });
 
+app.delete('/api/trips/truncate', async function (req, res) {
+
+  let result = await service.deleteAll();
+
+  if (result) {
+    res.status(204).end();// true hence the deletion succeeded
+  }
+  else {
+    res.status(404).end();// false hence the deletion succeeded (204 or 404???)
+  }
+});
+
 
 
 // and finally ... run it :-)
