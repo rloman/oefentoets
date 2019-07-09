@@ -70,11 +70,11 @@ app.put('/api/trips/:id', async function(req, res) {
   let id = +req.params.id
   let inputTrip = req.body;
 
-  let updatedUser = await service.updateById(id, inputTrip);
+  let updatedTrp = await service.updateById(id, inputTrip);
 
-  if (updatedUser) {
+  if (updatedTrp) {
     res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify(updatedUser));
+    res.end(JSON.stringify(updatedTrp));
   } else {
     res.setHeader('Content-Type', 'application/json')
     console.log("Not found!!!");
