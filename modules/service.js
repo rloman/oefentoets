@@ -8,6 +8,11 @@ class Service {
     }
 
 
+    async save(trip) {
+        return await this.repository.create(trip);
+    }
+
+
     async create() { // might refactor this to return the Promise and get the id als the key (in fact I am doing this)
         let trip = {
             start: new Date()
