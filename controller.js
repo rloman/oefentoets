@@ -82,18 +82,6 @@ app.put('/api/trips/:id', async function (req, res) {
   }
 });
 
-app.delete('/api/trips/:id', async function (req, res) {
-  let id = +req.params.id;
-
-  let result = await service.deleteById(id);
-
-  if (result) {
-    res.status(204).end();// true hence the deletion succeeded
-  }
-  else {
-    res.status(404).end();// false hence the deletion succeeded (204 or 404???)
-  }
-});
 
 app.delete('/api/trips/truncate', async function (req, res) {
 
@@ -107,7 +95,18 @@ app.delete('/api/trips/truncate', async function (req, res) {
   }
 });
 
+app.delete('/api/trips/:id', async function (req, res) {
+  let id = +req.params.id;
 
+  let result = await service.deleteById(id);
+
+  if (result) {
+    res.status(204).end();// true hence the deletion succeeded
+  }
+  else {
+    res.status(404).end();// false hence the deletion succeeded (204 or 404???)
+  }
+});
 
 // and finally ... run it :-)
 // get the server from the app which runs on port 8081
