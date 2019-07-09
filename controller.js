@@ -45,7 +45,7 @@ app.get('/api/trips/:id', async function (req, res) {
   }
 });
 
-app.post('/api/trips', async function(req, res) {
+app.post('/api/trips', async function (req, res) {
 
   let trip = req.body;
 
@@ -64,7 +64,7 @@ app.post('/api/trips', async function(req, res) {
 });
 
 // put
-app.put('/api/trips/:id', async function(req, res) {
+app.put('/api/trips/:id', async function (req, res) {
 
   // First read id from params
   let id = +req.params.id
@@ -79,6 +79,19 @@ app.put('/api/trips/:id', async function(req, res) {
     res.setHeader('Content-Type', 'application/json')
     console.log("Not found!!!");
     res.status(404).end();
+  }
+});
+
+app.delete('/api/trips/:id', async function (req, res) {
+  let id = +req.params.id;
+
+  let result = await service.deleteById(id);
+
+  if (result) {
+    res.status(204).end();// true hence the deletion succeeded
+  }
+  else {
+    res.status(404).end();// false hence the deletion succeeded (204 or 404???)
   }
 });
 
