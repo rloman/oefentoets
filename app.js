@@ -1,134 +1,115 @@
-'use strict';
+"use strict";
 
-let assert = require("./modules/utils").assert;
-let Trip = require("./modules/trip");
+let express = require('express');
+let app = express();
 
+let bodyParser = require('body-parser');
 
-(async () => {
-    console.log("Starting main ... ");
-
-
-    let service = require('./modules/service');
-    try {
-        // clear all (for demo)
-        let result = await service.deleteAll();
-        assert(result, "Result should be truthy");
-        assert( !result.then, "fout in return");
-        if(result) {
-            console.log(`Removed all trips`);
-        }
-    }
-    catch (err) {
-        console.log("Unable to remove trips for reason: " + error);
-    }
-
-    // create three trips
-    for(let i = 0;i<3;i++) {
-        try {
-            let createdTrip = await service.create();
-            console.log("Created trip: >" + createdTrip.id + "<");
-                assert(0 !== createdTrip.id, "The id of trip should not be zero");
-                assert(1 <=  createdTrip.id)
-                // trip.id = createdTrip.id+1;
-        }
-        catch(error) {
-            assert(false);
-            console.log("Error: >" + error + "<");
-        }
-    }
-    // created three trips
-
-    // find all
-    try {
-        let rows = await service.findAll();
-        let counter = 0;
-        for (let trip of rows) {
-            counter++;
-            console.log(trip.id + ", " + trip.start + ", " + trip.end);
-        }
-        assert(counter > 0);
-
-    }
-    catch(error) {
-        assert(false);
-        console.log(error);
-    }
-    
-    // find by id
-    try {
-        const target = 3;
-        let trip = await service.findById(target);
-        if(trip) {
-            console.log("Trip met id: " + trip.id + " heeft startmoment " + trip.start);
-        }
-        else {
-            assert(false, "Geen tocht gevonden met id: "+target);
-            console.log("Trip with id: "+target+" not found!");
-        }
-    }
-    catch(error) {
-        assert(false, "Fout / error ");
-        console.log("Something went wrong since: " + error);
-    }
+app.use(bodyParser.json());
 
 
-    // end by id
-    try {
-        let result = await service.endTrip(1); // 1 is there~~~???~?~?
-        console.log("Last method: Updated with ending expected:true, actual:" + result);
-        assert (result);// since there is no trip with id 1000
-        
-    }
-    catch(error) {
-        assert(false);
-        console.log("Some error occured " + error);
-    }
-
-    try {
-        let result = await service.endTrip(1000);
-        console.log("Last method: Updated with ending expected:false, actual:" + result);
-        assert (!result);// since there is no trip with id 1000
-       
-    }
-    catch(error) {
-        assert(false);
-        console.log("Some error occured " + error);
-    }
-
-    //update by id
-    try {
-
-        let targetId = 3;
-        let target = new Trip();
-        target.start = new Date(2019, 5, 7);
-        target.end =  new Date(2019, 5, 7);
-        let updatedTrip = await service.updateById(targetId, target);
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 
-        assert(targetId === updatedTrip.id);
-        assert(target.start.day === updatedTrip.start.day);
-        assert(target.end.month === updatedTrip.end.month);
-    }
-    catch(error) {
-        assert(false);
-        console.log("Some error occured " + error);
-    }
+let service = require("./modules/service");
 
-    // delete by id
-    try {
-        const victim = 3;
-        let result = await service.deleteById(victim);
-        console.log("Trip with id: " + victim + " is" + (result ? "" : " not") + " deleted");
-        assert(result);
+app.get('/api/trips', async function (req, res) {
 
-        assert(!await service.findById(victim));
-        assert(!await service.deleteById(victim));
-    }
-    catch(error) {
-        assert(false);
-        console.log("Error: " + error);
-    }
-        
-    service.stop();
-})();
+  res.setHeader('Content-Type', 'application/json');
 
+  let users = await service.findAll();
+  res.end(JSON.stringify(users));
+});
+
+app.get('/api/trips/:id', async function (req, res) {
+
+  let id = +req.params.id
+
+  let trip = await service.findById(id);
+  // OK we found a user
+  if (trip) {
+    res.setHeader('Content-Type', 'application/json')
+    // response end with a string of the found user
+    res.end(JSON.stringify(trip));
+  } else {
+    // error, we did NOT find a user
+    res.setHeader('Content-Type', 'application/json')
+
+    // so render the common 404 (Not found)
+    res.status(404).end();
+  }
+});
+
+app.post('/api/trips', async function (req, res) {
+
+  let trip = req.body;
+
+  let savedTrip = await service.save(trip);
+  if (savedTrip) {
+    res.setHeader('Content-Type', 'application/json')
+    // response end with a string of the found user
+    res.status(201).end(JSON.stringify(savedTrip));
+  } else {
+    // error, we did NOT find a user
+    res.setHeader('Content-Type', 'application/json')
+
+    // so render the common 404 (Not found)
+    res.status(404).end();
+  }
+});
+
+// put
+app.put('/api/trips/:id', async function (req, res) {
+
+  // First read id from params
+  let id = +req.params.id
+  let inputTrip = req.body;
+
+  let updatedTrp = await service.updateById(id, inputTrip);
+
+  if (updatedTrp) {
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify(updatedTrp));
+  } else {
+    res.setHeader('Content-Type', 'application/json')
+    console.log("Not found!!!");
+    res.status(404).end();
+  }
+});
+
+
+app.delete('/api/trips/truncate', async function (req, res) {
+
+  let result = await service.deleteAll();
+
+  if (result) {
+    res.status(204).end();// true hence the deletion succeeded
+  }
+  else {
+    res.status(404).end();// false hence the deletion succeeded (204 or 404???)
+  }
+});
+
+app.delete('/api/trips/:id', async function (req, res) {
+  let id = +req.params.id;
+
+  let result = await service.deleteById(id);
+
+  if (result) {
+    res.status(204).end();// true hence the deletion succeeded
+  }
+  else {
+    res.status(404).end();// false hence the deletion succeeded (204 or 404???)
+  }
+});
+
+// and finally ... run it :-)
+// get the server from the app which runs on port 8081
+let server = app.listen(8081, function () {
+  console.log("Example app listening at http://%s:%s", server.address().address, server.address().port)
+});
