@@ -68,12 +68,12 @@ app.put('/api/users/:id', async function(req, res) {
 
   // First read id from params
   let id = +req.params.id
-  let inputUser = req.body;
+  let inputTrip = req.body;
 
-  console.log("Received username: "+inputUser.name);
-  console.log("Received email: "+inputUser.email);
+  console.log("Received username: "+inputTrip.name);
+  console.log("Received email: "+inputTrip.email);
 
-  let updatedUser = await service.updateById(id, inputUser);
+  let updatedUser = await service.updateById(id, inputTrip);
 
   if (updatedUser) {
     res.setHeader('Content-Type', 'application/json')
