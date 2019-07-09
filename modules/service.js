@@ -40,11 +40,11 @@ class Service {
     }
 
     async deleteById(id) {
-       return this.repository.deleteById(id);
+       return await this.repository.deleteById(id);
     }
 
     async deleteAll() {
-      return this.repository.deleteAll();
+      return await this.repository.deleteAll();
     }
 
     stop() {
