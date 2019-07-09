@@ -63,6 +63,28 @@ app.post('/api/trips', async function(req, res) {
   }
 });
 
+// put
+app.put('/api/users/:id', async function(req, res) {
+
+  // First read id from params
+  let id = +req.params.id
+  let inputUser = req.body;
+
+  console.log("Received username: "+inputUser.name);
+  console.log("Received email: "+inputUser.email);
+
+  let updatedUser = await service.updateById(id, inputUser);
+
+  if (updatedUser) {
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify(updatedUser));
+  } else {
+    res.setHeader('Content-Type', 'application/json')
+    console.log("Not found!!!");
+    res.status(404).end();
+  }
+});
+
 
 
 // and finally ... run it :-)
