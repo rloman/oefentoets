@@ -1,14 +1,12 @@
 "use strict";
 
+let bodyParser = require('body-parser');
+let service = require("./modules/service");
+
 let express = require('express');
 let controller = express();
 
-let bodyParser = require('body-parser');
-
-let service = require("./modules/service");
-
 controller.use(bodyParser.json());
-
 
 controller.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
