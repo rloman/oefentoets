@@ -1,9 +1,21 @@
 == News Flash
 
-.08-07-2019
-* Released version v3.0.0
+.10-07-2019
+* Released version v4.0.0
 
 == Release notes
+
+.v4.0.0 (10-07-2019)
+* Rename app to controller
+* Refactor Trip from class to Json to have one less require
+* Rename test.js to service.integration.test.js
+* Move controller.js to app.js and move the previous app.js to test.js
+* Apparently it rocks when I move the trucate controller method above the DELETE api/trips:id
+* Add delete method in controller
+* Add find one in controller (after adding findall already)
+* Add controller
+* Let the update throw an Error when try to update non-existing Trip. (just like Spring Boot)
+* Add Service in between app and repo
 
 .v3.0.0 (08-07-2019)
 * Move and clean up
