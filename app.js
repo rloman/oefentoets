@@ -1,120 +1,113 @@
-'use strict';
+"use strict";
+
+let bodyParser = require('body-parser');
+let service = require("./modules/service");
+
+let express = require('express');
+let controller = express();
+
+controller.use(bodyParser.json());
+
+controller.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 
+controller.get('/api/trips', async function (req, res) {
 
-let Trip = require('./modules/trip');
-let repository = require('./modules/repository');
-let assert = require("./modules/utils").assert;
+  res.setHeader('Content-Type', 'application/json');
 
-console.log("Starting main ... ");
+  let users = await service.findAll();
+  res.end(JSON.stringify(users));
+});
 
+controller.get('/api/trips/:id', async function (req, res) {
 
+  let id = +req.params.id
 
-(async () => {
-    try {
-        // clear all (for demo)
-        let result = await repository.deleteAll();
-        assert(result, "Result should be truthy");
-        assert( !result.then, "fout in return");
-        if(result) {
-            console.log(`Removed all trips`);
-        }
-    }
-    catch (err) {
-        console.log("Unable to remove trips for reason: " + error);
-    }
+  let trip = await service.findById(id);
+  // OK we found a user
+  if (trip) {
+    res.setHeader('Content-Type', 'application/json')
+    // response end with a string of the found user
+    res.end(JSON.stringify(trip));
+  } else {
+    // error, we did NOT find a user
+    res.setHeader('Content-Type', 'application/json')
 
-    // create three trips
-    for(let i = 0;i<3;i++) {
-        try {
-            let trip = {
-                start: new Date()
-            };
-            let createdTrip = await repository.create(trip);
-            console.log("Created trip: >" + createdTrip.id + "<");
-                assert(0 !== createdTrip.id, "The id of trip should not be zero");
-                assert(1 <=  createdTrip.id)
-                // trip.id = createdTrip.id+1;
-        }
-        catch(error) {
-            assert(false);
-            console.log("Error: >" + error + "<");
-        }
-    }
-    // created three trips
+    // so render the common 404 (Not found)
+    res.status(404).end();
+  }
+});
 
-    // find all
-    try {
-        let rows = await repository.findAll();
-        let counter = 0;
-        for (let trip of rows) {
-            counter++;
-            console.log(trip.id + ", " + trip.start + ", " + trip.end);
-        }
-        assert(counter > 0);
+controller.post('/api/trips', async function (req, res) {
 
-    }
-    catch(error) {
-        assert(false);
-        console.log(error);
-    }
-    
-    // find by id
-    try {
-        const target = 3;
-        let trip = await repository.findById(target);
-        if(trip) {
-            console.log("Trip met id: " + trip.id + " heeft startmoment " + trip.start);
-        }
-        else {
-            assert(false, "Geen tocht gevonden met id: "+target);
-            console.log("Trip with id: "+target+" not found!");
-        }
-    }
-    catch(error) {
-        assert(false, "Fout / error ");
-        console.log("Something went wrong since: " + error);
-    }
+  let trip = req.body;
+
+  let savedTrip = await service.save(trip);
+  if (savedTrip) {
+    res.setHeader('Content-Type', 'application/json')
+    // response end with a string of the found user
+    res.status(201).end(JSON.stringify(savedTrip));
+  } else {
+    // error, we did NOT find a user
+    res.setHeader('Content-Type', 'application/json')
+
+    // so render the common 404 (Not found)
+    res.status(404).end();
+  }
+});
+
+// put
+controller.put('/api/trips/:id', async function (req, res) {
+
+  // First read id from params
+  let id = +req.params.id
+  let inputTrip = req.body;
+
+  let updatedTrp = await service.updateById(id, inputTrip);
+
+  if (updatedTrp) {
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify(updatedTrp));
+  } else {
+    res.setHeader('Content-Type', 'application/json')
+    console.log("Not found!!!");
+    res.status(404).end();
+  }
+});
 
 
-    // end by id
-    try {
-        let result = await repository.endTrip(1); // 1 is there~~~???~?~?
-        console.log("Last method: Updated with ending expected:true, actual:" + result);
-        assert (result);// since there is no trip with id 1000
-        
-    }
-    catch(error) {
-        assert(false);
-        console.log("Some error occured " + error);
-    }
+controller.delete('/api/trips/truncate', async function (req, res) {
 
-    try {
-        let result = await repository.endTrip(1000);
-        console.log("Last method: Updated with ending expected:false, actual:" + result);
-        assert (!result);// since there is no trip with id 1000
-       
-    }
-    catch(error) {
-        assert(false);
-        console.log("Some error occured " + error);
-    }
+  let result = await service.deleteAll();
 
-    // delete by id
-    try {
-        const victim = 3;
-        let result = await repository.deleteById(victim);
-        console.log("Trip with id: " + victim + " is" + (result ? "" : " not") + " deleted");
-        assert(result);
+  if (result) {
+    res.status(204).end();// true hence the deletion succeeded
+  }
+  else {
+    res.status(404).end();// false hence the deletion succeeded (204 or 404???)
+  }
+});
 
-        assert(!await repository.findById(victim));
-        assert(!await repository.deleteById(victim));
-    }
-    catch(error) {
-        assert(false);
-        console.log("Error: " + error);
-    }
-        
-    repository.stop();
-})();
+controller.delete('/api/trips/:id', async function (req, res) {
+  let id = +req.params.id;
 
+  let result = await service.deleteById(id);
+
+  if (result) {
+    res.status(204).end();// true hence the deletion succeeded
+  }
+  else {
+    res.status(404).end();// false hence the deletion succeeded (204 or 404???)
+  }
+});
+
+// and finally ... run it :-)
+// get the server from the app which runs on port 8081
+let server = controller.listen(8081, function () {
+  console.log("Example app listening at http://%s:%s", server.address().address, server.address().port)
+});

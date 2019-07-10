@@ -53,7 +53,22 @@ class Repository {
             return trip;
         }
         else {
-          return false;
+            return false;
+        }
+    }
+
+    async updateById(id, data) {
+
+        let affectedRows = await this.connection.query("update trip set start=?, end=? where id=?", [data.start, data.end, id]);
+
+        if (affectedRows) {
+            // fetch the new trip after updating!!!
+            let updatedTrip = await this.findById(id);
+
+            return updatedTrip;
+        }
+        else {
+            throw new Error("Trying to update a non-existing trip which is considered a failure!!!");
         }
     }
 
@@ -68,7 +83,7 @@ class Repository {
 
     async deleteById(id) {
         let result = await this.connection.query("delete from trip where id='?'", id);
-        
+
         return result.affectedRows === 1;
     }
 
