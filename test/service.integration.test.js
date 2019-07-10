@@ -6,8 +6,6 @@ let service = require('../modules/service');
 
 (async () => {
     console.log("Starting main ... ");
-
-
     
     try {
         // clear all (for demo)
