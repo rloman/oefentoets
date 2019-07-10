@@ -1,14 +1,16 @@
 "use strict";
 
 let express = require('express');
-let app = express();
+let controller = express();
 
 let bodyParser = require('body-parser');
 
-app.use(bodyParser.json());
+let service = require("./modules/service");
+
+controller.use(bodyParser.json());
 
 
-app.use(function (req, res, next) {
+controller.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -16,9 +18,7 @@ app.use(function (req, res, next) {
 });
 
 
-let service = require("./modules/service");
-
-app.get('/api/trips', async function (req, res) {
+controller.get('/api/trips', async function (req, res) {
 
   res.setHeader('Content-Type', 'application/json');
 
@@ -26,7 +26,7 @@ app.get('/api/trips', async function (req, res) {
   res.end(JSON.stringify(users));
 });
 
-app.get('/api/trips/:id', async function (req, res) {
+controller.get('/api/trips/:id', async function (req, res) {
 
   let id = +req.params.id
 
@@ -45,7 +45,7 @@ app.get('/api/trips/:id', async function (req, res) {
   }
 });
 
-app.post('/api/trips', async function (req, res) {
+controller.post('/api/trips', async function (req, res) {
 
   let trip = req.body;
 
@@ -64,7 +64,7 @@ app.post('/api/trips', async function (req, res) {
 });
 
 // put
-app.put('/api/trips/:id', async function (req, res) {
+controller.put('/api/trips/:id', async function (req, res) {
 
   // First read id from params
   let id = +req.params.id
@@ -83,7 +83,7 @@ app.put('/api/trips/:id', async function (req, res) {
 });
 
 
-app.delete('/api/trips/truncate', async function (req, res) {
+controller.delete('/api/trips/truncate', async function (req, res) {
 
   let result = await service.deleteAll();
 
@@ -95,7 +95,7 @@ app.delete('/api/trips/truncate', async function (req, res) {
   }
 });
 
-app.delete('/api/trips/:id', async function (req, res) {
+controller.delete('/api/trips/:id', async function (req, res) {
   let id = +req.params.id;
 
   let result = await service.deleteById(id);
@@ -110,6 +110,6 @@ app.delete('/api/trips/:id', async function (req, res) {
 
 // and finally ... run it :-)
 // get the server from the app which runs on port 8081
-let server = app.listen(8081, function () {
+let server = controller.listen(8081, function () {
   console.log("Example app listening at http://%s:%s", server.address().address, server.address().port)
 });
