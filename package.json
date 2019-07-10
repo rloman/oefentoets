@@ -1,6 +1,6 @@
 {
   "name": "nl.carpago",
-  "version": "4.0.0-SNAPSHOT",
+  "version": "4.0.0",
   "description": "Oefentoets solution for 01-02-2019 and (later) use as learn and do for Promise and async await",
   "main": "app.js",
   "scripts": {
