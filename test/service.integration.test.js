@@ -1,14 +1,14 @@
 'use strict';
 
 let assert = require("../modules/utils").assert;
-let Trip = require("../modules/trip");
 
+let service = require('../modules/service');
 
 (async () => {
     console.log("Starting main ... ");
 
 
-    let service = require('../modules/service');
+    
     try {
         // clear all (for demo)
         let result = await service.deleteAll();
@@ -99,7 +99,7 @@ let Trip = require("../modules/trip");
     try {
 
         let targetId = 3;
-        let target = new Trip();
+        let target = {};
         target.start = new Date(2019, 5, 7);
         target.end =  new Date(2019, 5, 7);
         let updatedTrip = await service.updateById(targetId, target);
